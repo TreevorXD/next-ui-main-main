@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.danger-row {
+    background-color: #9f7f4e; /* Set your desired color */
+    border-radius: 5rem;
+  }
