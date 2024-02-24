@@ -1,14 +1,15 @@
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { apiKeys } from '../../authKeys'; // Update the path accordingly
-
+import { config } from 'dotenv';
+config();
 const rows = require('../../../db/serverData'); // Assuming rows is an array of objects
 
 // Define a simple rate-limiting mechanism
 const requestLimits = new Map();
 
 // Discord Webhook URL
-const discordWebhookURL = 'https://discord.com/api/webhooks/1209601926287589428/zxf69a4AfYA2QnS8ADfwBk9fAfvt0YBFsxwen-aQsW_oAeLO2142XpLLuulVhUC98_sr';
+const discordWebhookURL = process.env.WEBHOOK;
 
 async function sendDiscordWebhook(ipAddress, authKey) {
     const webhookData = {
