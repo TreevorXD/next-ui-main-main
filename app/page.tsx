@@ -2,13 +2,18 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Montserrat } from 'next/font/google'
- 
+import { Button } from '@nextui-org/button' 
+import { useRouter } from 'next/navigation'
+
 const montserrat = Montserrat({ 
   weight: '600',
   subsets: ['latin'] })
  
 export default function App() {
+  const router = useRouter()
+
   return (
+    
     <main className={montserrat.className}>
       <div className='w-full absolute flex justify-center'>
         <ul className='text-center'>
@@ -21,15 +26,22 @@ export default function App() {
         height={900}
         alt="antip2w"/>
 </li>
-<li className='pt-7'>
-<Link className='text-4xl' href='/db'>Realm Database</Link>
+<li className='pt-10'>
+<Button size='lg' variant='ghost' onClick={() => router.push('/db')}>
+        Database
+      </Button>
 </li>
-<li className='pt-7'>
-<Link className='text-4xl' href='/socials'>Socials</Link>
+<li className='pt-10'>
+<Button size='lg' variant='ghost' onClick={() => router.push('/socials')}>
+        Socials
+      </Button>
 </li>
-<li className='pt-7'>
-<Link className='text-4xl' href='/'>Discord</Link>
+<li className='pt-10'>
+<Button size='lg' variant='ghost' onClick={() => router.push('https://discord.gg/antip2w')}>
+        Discord
+      </Button>
 </li>
+
         </ul>
       </div>
     </main>
