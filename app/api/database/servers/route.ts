@@ -2,7 +2,7 @@ import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { apiKeys } from '../../authKeys'; // Update the path accordingly
 
-const rows = require('../../db/serverData'); // Assuming rows is an array of objects
+const rows = require('../../../db/serverData'); // Assuming rows is an array of objects
 
 // Define a simple rate-limiting mechanism
 const requestLimits = new Map();
