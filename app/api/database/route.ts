@@ -5,7 +5,7 @@ const rows = require('../../db/serverData'); // Assuming rows is an array of obj
 
 export async function GET(request: Request) {
     // Step 1: Read the authorization keys from the JSON file
-    const authKeysPath = resolve(__dirname, 'auth-keys.json');
+    const authKeysPath = resolve(__dirname, '../auth-keys.json');
     const authKeysData = JSON.parse(readFileSync(authKeysPath, 'utf-8'));
     const authKeys = authKeysData.keys;
 
