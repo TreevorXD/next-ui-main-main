@@ -16,7 +16,7 @@ export default function App() {
 </li>
 <li>
 <Image className='animate-custom-pulse rounded-lg mt-10'
-        src="/../images/stilllogo.png"
+        src="/../images/logo3.png"
         width={900}
         height={900}
         alt="antip2w"/>
