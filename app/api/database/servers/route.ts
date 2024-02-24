@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import { apiKeys } from '../authKeys'; // Update the path accordingly
+import { apiKeys } from '../../authKeys'; // Update the path accordingly
 
 const rows = require('../../db/serverData'); // Assuming rows is an array of objects
 
