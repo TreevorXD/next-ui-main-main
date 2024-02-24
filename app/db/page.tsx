@@ -67,8 +67,12 @@ const ProofLink = ({ value }: { value: string | string[] }) => (
 
 const columns = [
   {
-    key: "server_name",
+    key: "discord_name",
     label: "Name",
+  },
+  {
+    key: "realm_id",
+    label: "Realm Id",
   },
   {
     key: "realm_code",
@@ -106,6 +110,10 @@ const columns = [
     key: "dangerous",
     label: "Suspicious Owner?",
     render: (value: boolean) => (value ? "Yes" : "No"),
+  },
+  {
+    key: "p2w_id",
+    label: "P2W ID",
   },
 ];
 
