@@ -25,6 +25,9 @@ export default function App() {
 <Link className='text-4xl' href='/db'>Realm Database</Link>
 </li>
 <li className='pt-7'>
+<Link className='text-4xl' href='/socials'>Socials</Link>
+</li>
+<li className='pt-7'>
 <Link className='text-4xl' href='/'>Discord</Link>
 </li>
         </ul>
