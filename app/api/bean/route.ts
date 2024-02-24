@@ -1,41 +1,18 @@
-// main.ts
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import { rateLimit } from '../../ratelimiter';
+import { apiKeys } from '../authKeys'; // Update the path accordingly
 
-export async function GET(request: Request) {
-    // Step 1: Read the authorization keys from the JSON file
-    const authKeysPath = resolve(__dirname, '../../auth-keys.json');
-    const authKeysData = JSON.parse(readFileSync(authKeysPath, 'utf-8'));
-    const authKeys = authKeysData.keys;
+const rows = require('../../db/serverData'); // Assuming rows is an array of objects
 
-    // Step 2: Check if the Authorization header is present in the request and matches any of the keys
-    const authorizationHeader = request.headers.get('Authorization');
+// Define a simple rate-limiting mechanism
+const requestLimits = new Map();
 
-    if (!authorizationHeader || !authKeys.includes(authorizationHeader.replace('Bearer ', ''))) {
-        // Unauthorized access
-        return new Response('Unauthorized Request', { status: 401 });
-    }
+// Discord Webhook URL
+const discordWebhookURL = 'https://discord.com/api/webhooks/1209601926287589428/zxf69a4AfYA2QnS8ADfwBk9fAfvt0YBFsxwen-aQsW_oAeLO2142XpLLuulVhUC98_sr';
 
-    // Step 3: Implement rate limiting
-    const clientIP = request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For') || request.headers.get('Remote-Addr');
-
-    // Step 4: If authorized and not rate-limited, proceed with fetching the data
-    const responseBody ='https://assets.shop.loblaws.ca/products/20177278001/b1/en/open/20177278001_open_a01_@2.png'
-
-    return new Response(responseBody, {
-        status: 200, // Specify the desired HTTP status code (e.g., 200 for OK)
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
-}
-
-// Function to log to Discord webhook
-async function logToDiscord(message: string) {
-    const discordWebhookURL = 'https://discord.com/api/webhooks/1209601922890342412/ArqbTUiamawHv4C3lcGVsqzIwfe5_9saH1vBNQMIgBs7wS8fusq4LSQ1PEDDx2MhCGHs';
-    const discordPayload = {
-        content: message,
+async function sendDiscordWebhook(ipAddress, authKey) {
+    const webhookData = {
+        content: `Rate limit exceeded!\nIP Address: ${ipAddress}\nAuth Key: ${authKey}`,
     };
 
     await fetch(discordWebhookURL, {
@@ -43,6 +20,57 @@ async function logToDiscord(message: string) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(discordPayload),
+        body: JSON.stringify(webhookData),
+    });
+}
+
+export async function GET(request: Request) {
+    // Step 1: Check for Authorization header
+    const authHeader = request.headers.get('Authorization');
+
+    if (!authHeader || !apiKeys.includes(authHeader)) {
+        // Step 2: If Authorization header is missing or invalid key, return unauthorized
+        return new Response('Unauthorized', {
+            status: 401,
+            headers: {
+                'Content-Type': 'text/plain',
+            },
+        });
+    }
+
+    // Step 3: Check rate limiting
+    const clientIP = request.headers.get('CF-Connecting-IP'); // Assuming you are using Cloudflare or a similar service
+
+    const requestCount = requestLimits.get(clientIP) || 0;
+
+    if (requestCount >= 5) {
+        // Too many requests, send a webhook to Discord
+        await sendDiscordWebhook(clientIP, authHeader);
+
+        // Return a rate-limit exceeded response
+        return new Response('Rate Limit Exceeded', {
+            status: 429,
+            headers: {
+                'Content-Type': 'text/plain',
+            },
+        });
+    }
+
+    // Update the request count for the current IP
+    requestLimits.set(clientIP, requestCount + 1);
+
+    // Reset the request count after 10 seconds
+    setTimeout(() => {
+        requestLimits.delete(clientIP);
+    }, 10000); // 10 seconds in milliseconds
+
+    // If authorized and within rate limits, proceed with fetching the data
+    const responseBody = 'beans?';
+
+    return new Response(responseBody, {
+        status: 200, // Specify the desired HTTP status code (e.g., 200 for OK)
+        headers: {
+            'Content-Type': 'application/json',
+        },
     });
 }
