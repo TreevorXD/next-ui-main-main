@@ -5,7 +5,7 @@ import fetch from 'node-fetch';
 config();
 
 const rows = require('../../../../../db/serverData');
-const authKeys = require('../../../authKeys'); // Update the path accordingly
+const authKeys = require('../../../../authKeys'); // Update the path accordingly
 const requestLimits = new Map();
 const discordWebhookURL = process.env.WEBHOOK;
 
