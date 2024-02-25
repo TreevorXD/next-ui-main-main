@@ -2,7 +2,6 @@ import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { config } from 'dotenv';
 import fetch from 'node-fetch';
-
 config();
 
 const rows = require('../../../../db/serverData');
