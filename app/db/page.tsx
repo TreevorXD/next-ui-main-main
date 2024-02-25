@@ -47,7 +47,7 @@ const LinkDropdown = ({ links }: { links: string[] }) => (
     <DropdownTrigger>
       <Button variant="bordered">Open Links</Button>
     </DropdownTrigger>
-    <DropdownMenu aria-label="Links">
+    <DropdownMenu aria-label="Links" placement="bottom-start">
       {links.map((link, index) => (
         <DropdownItem key={index} as="a" href={link} target="_blank" rel="noopener noreferrer">
           Link {index + 1}
