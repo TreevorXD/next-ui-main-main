@@ -1,12 +1,11 @@
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import { apiKeys } from '../../../authKeys';
 import { config } from 'dotenv';
 import fetch from 'node-fetch';
 config();
 
 const rows = require('../../../../db/serverData');
-
+const authKeys = require('../../../authKeys'); // Update the path accordingly
 const requestLimits = new Map();
 const discordWebhookURL = process.env.WEBHOOK;
 
@@ -27,7 +26,7 @@ async function sendDiscordWebhook(ipAddress, authKey) {
 export async function GET(request: Request) {
     const authHeader = request.headers.get('Authorization');
 
-    if (!authHeader || !apiKeys.includes(authHeader)) {
+    if (!authHeader || !authKeys.apiKeys.includes(authHeader)) {
         return new Response('Unauthorized', {
             status: 401,
             headers: {

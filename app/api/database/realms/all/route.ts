@@ -1,9 +1,12 @@
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import { apiKeys } from '../../../authKeys'; // Update the path accordingly
 import { config } from 'dotenv';
+import fetch from 'node-fetch';
+
 config();
-const rows = require('../../../../db/serverData'); // Assuming rows is an array of objects
+
+const authKeys = require('../../../authKeys'); // Update the path accordingly
+const serverDataPath = resolve(__dirname, '../../../../db/serverData'); // Assuming rows is an array of objects
 
 // Define a simple rate-limiting mechanism
 const requestLimits = new Map();
@@ -29,7 +32,7 @@ export async function GET(request: Request) {
     // Step 1: Check for Authorization header
     const authHeader = request.headers.get('Authorization');
 
-    if (!authHeader || !apiKeys.includes(authHeader)) {
+    if (!authHeader || !authKeys.apiKeys.includes(authHeader)) {
         // Step 2: If Authorization header is missing or invalid key, return unauthorized
         return new Response('Unauthorized', {
             status: 401,
@@ -66,7 +69,7 @@ export async function GET(request: Request) {
     }, 10000); // 10 seconds in milliseconds
 
     // If authorized and within rate limits, proceed with fetching the data
-    const responseBody = JSON.stringify(rows);
+    const responseBody = JSON.stringify(require(serverDataPath));
 
     return new Response(responseBody, {
         status: 200, // Specify the desired HTTP status code (e.g., 200 for OK)
