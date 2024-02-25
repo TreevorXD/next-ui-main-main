@@ -3,7 +3,7 @@ import { resolve } from 'path';
 import { config } from 'dotenv';
 import fetch from 'node-fetch'; // Make sure to install this dependency
 config();
-
+const rows = require ('../../../../../db/serverData.js');
 const serverDataPath = resolve(__dirname, '../../../../../db/serverData.js');
 const archiveDataPath = resolve(__dirname, '../../../../../db/archiveData.js');
 const authKeys = require('../../../../devKeys'); // Update the path accordingly
