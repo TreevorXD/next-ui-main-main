@@ -1,4 +1,3 @@
-'use client'
 import React from "react";
 import Image from 'next/image';
 import {
@@ -17,7 +16,7 @@ import { useAsyncList } from "@react-stately/data";
 import { Montserrat } from 'next/font/google'
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@nextui-org/react";
 
-const rows = require('../db/serverData');
+const rows = require('../db/serverData'); // Assuming rows is an array of objects
 
 const montserrat = Montserrat({
   weight: '600',
@@ -42,17 +41,12 @@ const DiscordInviteLink = ({ value }: { value: string }) => (
   </a>
 );
 
-interface DropdownMenuProps {
-  'aria-label': string;
-  placement: string;
-}
-
 const LinkDropdown = ({ links }: { links: string[] }) => (
   <Dropdown>
     <DropdownTrigger>
       <Button variant="bordered">Open Links</Button>
     </DropdownTrigger>
-    <DropdownMenu aria-label="Links" placement="bottom-start">
+    <DropdownMenu aria-label="Links">
       {links.map((link, index) => (
         <DropdownItem key={index} as="a" href={link} target="_blank" rel="noopener noreferrer">
           Link {index + 1}
@@ -157,6 +151,7 @@ export default function App() {
   const list = useAsyncList<Item>({
     async load({ signal }) {
       setIsLoading(false);
+      // Assuming rows is an array of objects
       return {
         items: rows,
       };
@@ -178,6 +173,8 @@ export default function App() {
           }),
         };
       } else {
+        // Handle the case where sortDescriptor.column is not available
+        // You can return the items as is or handle it in a different way based on your requirements
         return { items };
       }
     },
@@ -202,7 +199,9 @@ export default function App() {
 
   return (
     <main className={montserrat.className}>
+      
       <div className="w-full absolute flex justify-center">
+        {/* Add search input */}
         <ul className="">
           <li className="w-full flex justify-center">
             <Image
@@ -239,7 +238,7 @@ export default function App() {
                 {(column) => <TableColumn allowsSorting key={column.key}>{column.label}</TableColumn>}
               </TableHeader>
               <TableBody
-                items={filteredItems}
+                items={filteredItems} // Render the filtered items
                 isLoading={isLoading}
                 loadingContent={<Spinner label="Loading..." />}
               >
