@@ -201,8 +201,8 @@ export default function App() {
     <main className={montserrat.className}>
       <canvas ref={canvasRef} style={{ position: 'absolute', top: 0, left: 0, zIndex: -1 }} />
       <div className='w-full absolute flex justify-center'>
-        <ul className='text-center'>
-          <li className='pt-7'></li>
+        <ul className='text-center pt-12'>
+          <li className='mt-12'></li>
           <li className='pb-10'>
             <Image
               className='inline animate-custom-pulse rounded-lg mt-10'

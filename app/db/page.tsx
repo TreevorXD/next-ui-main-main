@@ -1,5 +1,4 @@
-'use client';
-// Import necessary components and libraries
+'use client'
 import React from "react";
 import Image from 'next/image';
 import {
@@ -16,6 +15,8 @@ import {
 } from "@nextui-org/react";
 import { useAsyncList } from "@react-stately/data";
 import { Montserrat } from 'next/font/google'
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@nextui-org/react";
+
 const rows = require('../db/serverData'); // Assuming rows is an array of objects
 
 const montserrat = Montserrat({
@@ -41,16 +42,31 @@ const DiscordInviteLink = ({ value }: { value: string }) => (
   </a>
 );
 
+const LinkDropdown = ({ links }: { links: string[] }) => (
+  <Dropdown>
+    <DropdownTrigger>
+      <Button variant="bordered">Open Links</Button>
+    </DropdownTrigger>
+    <DropdownMenu aria-label="Links" placement="bottom-start">
+      {links.map((link, index) => (
+        <DropdownItem key={index} as="a" href={link} target="_blank" rel="noopener noreferrer">
+          Link {index + 1}
+        </DropdownItem>
+      ))}
+    </DropdownMenu>
+  </Dropdown>
+);
+
 const SiteLink = ({ value }: { value: string | string[] }) => (
   <div>
     {Array.isArray(value) ? (
-      value.map((image, index) => (
-        <div key={index}>
-          <a href={image} target="_blank" rel="noopener noreferrer">
-            Link {index + 1}
-          </a>
-        </div>
-      ))
+      value.length > 1 ? (
+        <LinkDropdown links={value as string[]} />
+      ) : (
+        <a href={value[0]} target="_blank" rel="noopener noreferrer">
+          Link
+        </a>
+      )
     ) : (
       <a href={value} target="_blank" rel="noopener noreferrer">
         Link
@@ -62,13 +78,13 @@ const SiteLink = ({ value }: { value: string | string[] }) => (
 const ProofLink = ({ value }: { value: string | string[] }) => (
   <div>
     {Array.isArray(value) ? (
-      value.map((image, index) => (
-        <div key={index}>
-          <a href={image} target="_blank" rel="noopener noreferrer">
-            Link {index + 1}
-          </a>
-        </div>
-      ))
+      value.length > 1 ? (
+        <LinkDropdown links={value as string[]} />
+      ) : (
+        <a href={value[0]} target="_blank" rel="noopener noreferrer">
+          Link
+        </a>
+      )
     ) : (
       <a href={value} target="_blank" rel="noopener noreferrer">
         Link
@@ -165,31 +181,47 @@ export default function App() {
     },
   });
 
-// Add a search filter function
-const filterItems = (items: Item[], searchTerm: string) => {
-  const normalizedSearchTerm = searchTerm.toString().toLowerCase();
-  return items.filter((item) =>
-    typeof item.discord_name === 'string' && item.discord_name.toLowerCase().includes(normalizedSearchTerm)
-  );
-};
-
+  const filterItems = (items: Item[], searchTerm: string) => {
+    const normalizedSearchTerm = searchTerm.toString().toLowerCase();
+    
+    return items.filter((item) => {
+      for (const key in item) {
+        if (Object.prototype.hasOwnProperty.call(item, key)) {
+          const value = item[key];
+          if (typeof value === 'string' && value.toLowerCase().includes(normalizedSearchTerm)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    });
+  };
   const filteredItems = filterItems(list.items, searchTerm);
 
   return (
     <main className={montserrat.className}>
-      <div className="pb-5">
-        <Tooltip content="Yellow Highlighted Servers are Classified as 'suspicious' because the owner has done something sketchy">
-          <h1 className="text-center text-4xl">Pay To Win Realm Database (hover for info)</h1>
-        </Tooltip>
-      </div>
       
       <div className="w-full absolute flex justify-center">
         {/* Add search input */}
         <ul className="">
-          <li className="text-center pb-5">
+          <li className="w-full flex justify-center">
+            <Image
+              className='items-center'
+              src="/../images/rounded.png"
+              width={200}
+              height={200}
+              alt="antip2w"
+            />
+          </li>
+          <li className="pb-5">
+            <Tooltip content="Yellow Highlighted Servers are Classified as 'suspicious' because the owner has done something sketchy">
+              <h1 className="text-center text-4xl">P2W Realms Database (hover for info)</h1>
+            </Tooltip>
+          </li>
+          <li className="w-full flex justify-center text-center pb-5">
             <Input
-            className="w-1/5"
-              placeholder="Search by Name"
+              className="w-1/5"
+              placeholder="Search Anything"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
