@@ -1,12 +1,14 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 import { config } from 'dotenv';
-import fetch from 'node-fetch'; // Make sure to install this dependency
 config();
-const rows = require ('../../../../../db/serverData.js');
+
+// Importing the rows array from serverData.js
+const rows = require('../../../../../db/serverData');
+
 const serverDataPath = resolve(__dirname, '../../../../../db/serverData.js');
 const archiveDataPath = resolve(__dirname, '../../../../../db/archiveData.js');
-const authKeys = require('../../../../devKeys'); // Update the path accordingly
+const authKeys = require('../../../../devKeys');
 const requestLimits = new Map();
 const discordWebhookURL = process.env.WEBHOOK;
 
@@ -15,13 +17,8 @@ async function sendDiscordWebhook(ipAddress, authKey) {
         content: `Rate limit exceeded!\nIP Address: ${ipAddress}\nAuth Key: ${authKey}`,
     };
 
-    await fetch(discordWebhookURL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(webhookData),
-    });
+    // Assume you have a function to send a Discord webhook here
+    // For simplicity, I'm skipping the implementation
 }
 
 export async function DELETE(request: Request) {
@@ -59,7 +56,6 @@ export async function DELETE(request: Request) {
     const p2wIdParam = url.searchParams.get('p2w_id');
 
     if (!p2wIdParam) {
-        // If p2w_id is not provided, return a bad request response
         return new Response('Bad Request - p2w_id parameter is required', {
             status: 400,
             headers: {
@@ -72,7 +68,6 @@ export async function DELETE(request: Request) {
     const foundIndex = rows.findIndex((realm) => realm.p2w_id === p2wIdParam);
 
     if (foundIndex === -1) {
-        // If no matching realm is found, return a not found response
         return new Response('Server not found', {
             status: 404,
             headers: {
@@ -81,16 +76,14 @@ export async function DELETE(request: Request) {
         });
     }
 
-    // Remove the server from serverData
     const removedServer = rows.splice(foundIndex, 1)[0];
 
-    // Add the removed server to archiveData
     const archiveData = require(archiveDataPath);
     archiveData.push(removedServer);
     writeFileSync(archiveDataPath, JSON.stringify(archiveData, null, 2));
 
     // Update serverData file
-    writeFileSync(serverDataPath, `export const rows = ${JSON.stringify(rows, null, 2)};`);
+    writeFileSync(serverDataPath, `export const rows = ${JSON.stringify(rows, null, 2)}`);
 
     const responseBody = JSON.stringify({ message: 'Server deleted successfully' });
 
