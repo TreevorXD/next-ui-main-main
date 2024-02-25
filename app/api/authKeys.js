@@ -1,5 +1,5 @@
 
-export const apiKeys = [
+export const authKeys = [
     "DEV-qlHQ-cliK-yx7V-7iaa-NdWw-Tt1D-KXA9-CGJs",
     "DEV-ydTx-8ixo-NDlt-WvrP-lo4M-0N6a-woKH-sZW0",
     "DEV-FfMv-vXre-B9Fe-AFsl-TYBC-b6mF-ESjX-X5CT",
