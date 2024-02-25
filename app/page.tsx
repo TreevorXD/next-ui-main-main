@@ -228,7 +228,7 @@ export default function App() {
             </Button>
           </li>
           <li className='pt-10 inline pl-5 pr-5'>
-            <Button size='lg' variant='ghost' onClick={() => router.push('/api')}>
+            <Button size='lg' variant='ghost' onClick={() => router.push('https://documenter.getpostman.com/view/33096435/2sA2rCV2oq')}>
               API
             </Button>
           </li>

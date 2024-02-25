@@ -1,11 +1,11 @@
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import { apiKeys } from '../../../authKeys';
+import { apiKeys } from '../../../../authKeys';
 import { config } from 'dotenv';
 import fetch from 'node-fetch';
 config();
 
-const rows = require('../../../../db/serverData');
+const rows = require('../../../../../db/serverData');
 
 const requestLimits = new Map();
 const discordWebhookURL = process.env.WEBHOOK;
