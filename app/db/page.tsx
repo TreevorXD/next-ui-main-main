@@ -169,7 +169,7 @@ export default function App() {
 const filterItems = (items: Item[], searchTerm: string) => {
   const normalizedSearchTerm = searchTerm.toString().toLowerCase();
   return items.filter((item) =>
-    item.discord_name.toLowerCase().includes(normalizedSearchTerm)
+    typeof item.discord_name === 'string' && item.discord_name.toLowerCase().includes(normalizedSearchTerm)
   );
 };
 
