@@ -226,9 +226,9 @@ export default function App() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </li>
-          <li>
+          <li className="w-full flex justify-center">
             <Table
-              className="center w-full"
+              className="w-5/6"
               sortDescriptor={list.sortDescriptor}
               onSortChange={list.sort}
               aria-label="pay to win realm database"
