@@ -1,19 +1,21 @@
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import { apiKeys } from '../../../devKeys'; // Update the path accordingly
+import { apiKeys } from '../../../authKeys';
 import { config } from 'dotenv';
-config();
-const rows = require('../../../../db/serverData'); // Assuming rows is an array of objects
 
-// Define a simple rate-limiting mechanism
+import fetch from 'node-fetch';
+
+config();
+
+const rows = require('../../../../db/serverData');
+
 const requestLimits = new Map();
 
-// Discord Webhook URL
 const discordWebhookURL = process.env.WEBHOOK;
 
-async function sendDiscordWebhook(ipAddress, authKey) {
+async function sendDiscordWebhook(content: string) {
     const webhookData = {
-        content: `Rate limit exceeded!\nIP Address: ${ipAddress}\nAuth Key: ${authKey}`,
+        content,
     };
 
     await fetch(discordWebhookURL, {
@@ -25,12 +27,10 @@ async function sendDiscordWebhook(ipAddress, authKey) {
     });
 }
 
-export async function GET(request: Request) {
-    // Step 1: Check for Authorization header
+export async function handleRequest(request: Request): Promise<Response> {
     const authHeader = request.headers.get('Authorization');
 
     if (!authHeader || !apiKeys.includes(authHeader)) {
-        // Step 2: If Authorization header is missing or invalid key, return unauthorized
         return new Response('Unauthorized', {
             status: 401,
             headers: {
@@ -39,16 +39,11 @@ export async function GET(request: Request) {
         });
     }
 
-    // Step 3: Check rate limiting
-    const clientIP = request.headers.get('CF-Connecting-IP'); // Assuming you are using Cloudflare or a similar service
-
+    const clientIP = request.headers.get('CF-Connecting-IP');
     const requestCount = requestLimits.get(clientIP) || 0;
 
     if (requestCount >= 5) {
-        // Too many requests, send a webhook to Discord
-        await sendDiscordWebhook(clientIP, authHeader);
-
-        // Return a rate-limit exceeded response
+        await sendDiscordWebhook(`Rate limit exceeded!\nIP Address: ${clientIP}\nAuth Key: ${authHeader}`);
         return new Response('Rate Limit Exceeded', {
             status: 429,
             headers: {
@@ -57,19 +52,55 @@ export async function GET(request: Request) {
         });
     }
 
-    // Update the request count for the current IP
     requestLimits.set(clientIP, requestCount + 1);
 
-    // Reset the request count after 10 seconds
     setTimeout(() => {
         requestLimits.delete(clientIP);
-    }, 10000); // 10 seconds in milliseconds
+    }, 10000);
 
-    // If authorized and within rate limits, proceed with fetching the data
+    if (request.method === 'DELETE') {
+        const url = new URL(request.url);
+        const p2w_id = url.searchParams.get('p2w_id');
+
+        if (p2w_id) {
+            // Find the index of the server with the specified p2w_id
+            const index = rows.findIndex((server) => server.p2w_id === p2w_id);
+
+            if (index !== -1) {
+                // Server found, delete it
+                const deletedServer = rows.splice(index, 1)[0];
+
+                // Send deleted server information to Discord webhook
+                await sendDiscordWebhook(`Server deleted!\n${JSON.stringify(deletedServer, null, 2)}`);
+
+                return new Response('Server deleted', {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'text/plain',
+                    },
+                });
+            } else {
+                return new Response('Server not found', {
+                    status: 404,
+                    headers: {
+                        'Content-Type': 'text/plain',
+                    },
+                });
+            }
+        } else {
+            return new Response('Missing p2w_id parameter', {
+                status: 400,
+                headers: {
+                    'Content-Type': 'text/plain',
+                },
+            });
+        }
+    }
+
     const responseBody = JSON.stringify(rows);
 
     return new Response(responseBody, {
-        status: 200, // Specify the desired HTTP status code (e.g., 200 for OK)
+        status: 200,
         headers: {
             'Content-Type': 'application/json',
         },
