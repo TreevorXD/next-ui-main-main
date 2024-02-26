@@ -228,7 +228,7 @@ export default function App() {
           </li>
           <li>
             <Table
-              className="center w-3/5"
+              className="center w-full"
               sortDescriptor={list.sortDescriptor}
               onSortChange={list.sort}
               aria-label="pay to win realm database"

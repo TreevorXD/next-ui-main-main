@@ -200,7 +200,7 @@ export default function App() {
   return (
     <main className={montserrat.className}>
       <canvas ref={canvasRef} style={{ position: 'absolute', top: 0, left: 0, zIndex: -1 }} />
-      <div className='overflow-hidden w-full absolute flex justify-center'>
+      <div className='w-full absolute flex justify-center'>
         <ul className='text-center pt-12'>
           <li className='mt-12'></li>
           <li className='pb-10'>
