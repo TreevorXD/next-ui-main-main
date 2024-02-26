@@ -199,6 +199,10 @@ export default function App() {
 
   return (
     <main className={montserrat.className}>
+      <head>
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5323398300828688"
+     crossorigin="anonymous"></script>
+      </head>
       <canvas ref={canvasRef} style={{ position: 'absolute', top: 0, left: 0, zIndex: -1 }} />
       <div className='w-full absolute flex justify-center'>
         <ul className='text-center pt-12'>
