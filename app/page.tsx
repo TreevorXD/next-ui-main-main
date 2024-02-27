@@ -221,11 +221,6 @@ export default function App() {
             </Button>
           </li>
           <li className='pt-10 inline pl-5 pr-5'>
-            <Button size='lg' variant='ghost' onClick={() => router.push('/socials')}>
-              Socials
-            </Button>
-          </li>
-          <li className='pt-10 inline pl-5 pr-5'>
             <Button size='lg' variant='ghost' onClick={() => router.push('https://discord.gg/antip2w')}>
               Discord
             </Button>
