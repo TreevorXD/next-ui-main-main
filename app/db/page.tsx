@@ -200,72 +200,61 @@ export default function App() {
 
   return (
     <main className={montserrat.className}>
-      
-      <div className="w-full absolute flex justify-center">
-        {/* Add search input */}
-        <ul className="">
-          <li className="w-full flex justify-center">
-            <Image
-              className='items-center'
-              src="/../images/rounded.png"
-              width={200}
-              height={200}
-              alt="antip2w"
-            />
-          </li>
-          <li className="pb-5">
-            <Tooltip content="Yellow Highlighted Servers are Classified as 'suspicious' because the owner has done something sketchy">
-              <h1 className="text-center text-4xl">P2W Realms Database (hover for info)</h1>
-            </Tooltip>
-          </li>
-          <li className="w-full flex justify-center text-center pb-5">
-            <Input
-              className="w-1/5"
-              placeholder="Search Anything"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </li>
-          <li className="w-full flex justify-center">
-            <Table
-              className="w-5/6"
-              sortDescriptor={list.sortDescriptor}
-              onSortChange={list.sort}
-              aria-label="pay to win realm database"
-              color="default"
-              selectionMode="single"
-            >
-              <TableHeader columns={columns}>
-                {(column) => <TableColumn allowsSorting key={column.key}>{column.label}</TableColumn>}
-              </TableHeader>
-              <TableBody
-                items={filteredItems} // Render the filtered items
-                isLoading={isLoading}
-                loadingContent={<Spinner label="Loading..." />}
-              >
-                {(item: Item) => (
-                  <TableRow
-                    key={item.key}
-                    className={item.dangerous ? 'danger-row' : ''}
-                  >
-                    {(columnKey) => {
-                      const column = columns.find((col) => col.key === columnKey);
-                      const value = getKeyValue(item, columnKey) as string | string[] | boolean;
-                      return (
-                        <TableCell>
-                          {column && column.render
-                            ? (column.render as (value: string | boolean | string[]) => React.ReactNode)(value as string | boolean | string[])
-                            : value}
-                        </TableCell>
-                      );
-                    }}
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </li>
-        </ul>
-      </div>
-    </main>
+  <div className="w-full flex justify-center items-center flex-col">
+    {/* Add search input */}
+    <Image
+      className='items-center mb-3'
+      src="/../images/rounded.png"
+      width={200}
+      height={200}
+      alt="antip2w"
+    />
+    <Tooltip content="Yellow Highlighted Servers are Classified as 'suspicious' because the owner has done something sketchy">
+      <h1 className="text-center text-4xl mb-5">P2W Realms Database (hover for info)</h1>
+    </Tooltip>
+    <Input
+      className="w-5/6 mb-5 md:w-1/2"
+      placeholder="Search Anything"
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+    />
+    <Table
+      className="w-full md:w-5/6"
+      sortDescriptor={list.sortDescriptor}
+      onSortChange={list.sort}
+      aria-label="pay to win realm database"
+      color="default"
+      selectionMode="single"
+    >
+      <TableHeader columns={columns}>
+        {(column) => <TableColumn allowsSorting key={column.key}>{column.label}</TableColumn>}
+      </TableHeader>
+      <TableBody
+        items={filteredItems}
+        isLoading={isLoading}
+        loadingContent={<Spinner label="Loading..." />}
+      >
+        {(item: Item) => (
+          <TableRow
+            key={item.key}
+            className={item.dangerous ? 'danger-row' : ''}
+          >
+            {(columnKey) => {
+              const column = columns.find((col) => col.key === columnKey);
+              const value = getKeyValue(item, columnKey) as string | string[] | boolean;
+              return (
+                <TableCell>
+                  {column && column.render
+                    ? (column.render as (value: string | boolean | string[]) => React.ReactNode)(value as string | boolean | string[])
+                    : value}
+                </TableCell>
+              );
+            }}
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+  </div>
+</main>
   );
 }
