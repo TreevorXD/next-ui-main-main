@@ -199,39 +199,39 @@ export default function App() {
 
   return (
     <main className={montserrat.className}>
-<canvas
-  ref={canvasRef}
-  style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: -1 }}
-/>
-      <div className='w-full absolute flex justify-center'>
-        <ul className='text-center pt-12'>
-          <li className='mt-12'></li>
-          <li className='pb-10'>
-            <Image
-              className='inline animate-custom-pulse rounded-lg mt-10'
-              src="/../images/logo3.png"
-              width={900}
-              height={900}
-              alt="antip2w"
-            />
-          </li>
-          <li className='pt-10 inline pl-5 pr-5'>
-            <Button size='lg' variant='ghost' onClick={() => router.push('/db')}>
-              Database
-            </Button>
-          </li>
-          <li className='pt-10 inline pl-5 pr-5'>
-            <Button size='lg' variant='ghost' onClick={() => router.push('https://discord.gg/antip2w')}>
-              Discord
-            </Button>
-          </li>
-          <li className='pt-10 inline pl-5 pr-5'>
-            <Button size='lg' variant='ghost' onClick={() => router.push('https://documenter.getpostman.com/view/33096435/2sA2rCV2oq')}>
-              API
-            </Button>
-          </li>
-        </ul>
-      </div>
-    </main>
+    <canvas
+      ref={canvasRef}
+      style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: -1 }}
+    />
+    <div className='w-full absolute flex justify-center'>
+      <ul className='text-center pt-12'>
+        <li className='mt-12'></li>
+        <li className='pb-10'>
+          <Image
+            className='inline animate-custom-pulse rounded-lg mt-10'
+            src="/../images/logo3.png"
+            width={900}
+            height={900}
+            alt="antip2w"
+          />
+        </li>
+        <li className='pt-10 inline pl-5 pr-5'>
+          <Button size='lg' variant='ghost' onClick={() => router.push('/db')}>
+            Database
+          </Button>
+        </li>
+        <li className='pt-10 inline pl-5 pr-5'>
+          <Button size='lg' variant='ghost' onClick={() => router.push('https://discord.gg/antip2w')}>
+            Discord
+          </Button>
+        </li>
+        <li className='pt-10 inline pl-5 pr-5'>
+          <Button size='lg' variant='ghost' onClick={() => router.push('https://documenter.getpostman.com/view/33096435/2sA2rCV2oq')}>
+            API
+          </Button>
+        </li>
+      </ul>
+    </div>
+  </main>
   );
 }
