@@ -3,7 +3,7 @@ import { resolve } from 'path';
 import { apiKeys } from '../../../authKeys'; // Update the path accordingly
 import { config } from 'dotenv';
 config();
-const rows = require('../../../../db/serverData'); // Assuming rows is an array of objects
+const rows = require('../../../../database/serverData'); // Assuming rows is an array of objects
 
 // Define a simple rate-limiting mechanism
 const requestLimits = new Map();

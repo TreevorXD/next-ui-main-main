@@ -12,12 +12,13 @@ import {
   Spinner,
   Tooltip,
   Input,
+  Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure
 } from "@nextui-org/react";
 import { useAsyncList } from "@react-stately/data";
 import { Montserrat } from 'next/font/google'
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@nextui-org/react";
+import { Popover, PopoverTrigger, PopoverContent, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@nextui-org/react";
 
-const rows = require('../db/serverData'); // Assuming rows is an array of objects
+const rows = require('../database/serverData'); // Assuming rows is an array of objects
 
 const montserrat = Montserrat({
   weight: '600',
@@ -148,6 +149,7 @@ const columns = [
 export default function App() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [searchTerm, setSearchTerm] = React.useState("");
+  const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
   const list = useAsyncList<Item>({
     async load({ signal }) {
@@ -205,21 +207,50 @@ export default function App() {
     <Image
       className='items-center mb-3'
       src="/../images/rounded.png"
-      width={200}
-      height={200}
+      width={400}
+      height={400}
       alt="antip2w"
     />
-    <Tooltip content="Yellow Highlighted Servers are Classified as 'suspicious' because the owner has done something sketchy">
-      <h1 className="text-center text-4xl mb-5">P2W Realms Database (hover for info)</h1>
-    </Tooltip>
+<div>
+  <h1 className="float-left text-center text-4xl mb-5 pr-5">P2W Realms Database</h1>
+  </div>
+      
     <Input
       className="w-5/6 mb-5 md:w-1/2"
       placeholder="Search Anything"
       value={searchTerm}
       onChange={(e) => setSearchTerm(e.target.value)}
     />
+    <Button onPress={onOpen}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+  <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+</svg></Button>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">Database Information</ModalHeader>
+              <ModalBody>
+                <p>
+                  Servers that are not colored are regular P2W Servers
+                </p>
+                <p className="text-amber-500"> 
+                  Servers that are colored yellow are marked becuase the owner has done something questionable
+                </p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Close
+                </Button>
+                <Button color="primary" onPress={onClose}>
+                  Great!
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     <Table
-      className="w-full md:w-5/6"
+      className="w-full md:w-5/6 mt-5"
       sortDescriptor={list.sortDescriptor}
       onSortChange={list.sort}
       aria-label="pay to win realm database"

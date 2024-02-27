@@ -216,7 +216,7 @@ export default function App() {
           />
         </li>
         <li className='pt-10 inline pl-5 pr-5'>
-          <Button size='lg' variant='ghost' onClick={() => router.push('/db')}>
+          <Button size='lg' variant='ghost' onClick={() => router.push('/database')}>
             Database
           </Button>
         </li>
