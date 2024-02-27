@@ -1,8 +1,7 @@
-
 import { config } from 'dotenv';
 import { apiKeys } from '../../../authKeys';
 import fetch from 'node-fetch';
-const realmsData = require('../../../../database/serverData'); // Assuming rows is an array of objects
+const realmsData = require('../../../../database/serverData');
 config();
 
 // Define a simple rate-limiting mechanism
@@ -16,13 +15,18 @@ async function sendDiscordWebhook(ipAddress, authKey) {
         content: `Rate limit exceeded!\nIP Address: ${ipAddress}\nAuth Key: ${authKey}`,
     };
 
-    await fetch(discordWebhookURL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(webhookData),
-    });
+    try {
+        await fetch(discordWebhookURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(webhookData),
+        });
+    } catch (error) {
+        console.error('Error sending webhook:', error);
+        // Handle the error accordingly (e.g., log it, return an error response, etc.)
+    }
 }
 
 async function sendDiscordDeleteWebhook(deletedServer) {
@@ -30,13 +34,18 @@ async function sendDiscordDeleteWebhook(deletedServer) {
         content: `Server Deleted!\n${JSON.stringify(deletedServer, null, 2)}`,
     };
 
-    await fetch(discordWebhookURL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(webhookData),
-    });
+    try {
+        await fetch(discordWebhookURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(webhookData),
+        });
+    } catch (error) {
+        console.error('Error sending webhook:', error);
+        // Handle the error accordingly (e.g., log it, return an error response, etc.)
+    }
 }
 
 export async function DELETE(request) {
@@ -46,7 +55,7 @@ export async function DELETE(request) {
     if (!authHeader || !apiKeys.includes(authHeader)) {
         // Step 2: If Authorization header is missing or invalid key, return unauthorized
         return new Response('Unauthorized', {
-            status: 401,
+            status: 403,  // Change to 403 for unauthorized
             headers: {
                 'Content-Type': 'text/plain',
             },
@@ -54,7 +63,7 @@ export async function DELETE(request) {
     }
 
     // Step 3: Check rate limiting
-    const clientIP = request.headers.get('CF-Connecting-IP'); // Assuming you are using Cloudflare or a similar service
+    const clientIP = request.headers.get('CF-Connecting-IP');
 
     const requestCount = requestLimits.get(clientIP) || 0;
 
@@ -77,12 +86,23 @@ export async function DELETE(request) {
     // Reset the request count after 10 seconds
     setTimeout(() => {
         requestLimits.delete(clientIP);
-    }, 10000); // 10 seconds in milliseconds
+    }, 10000);
 
     // If authorized and within rate limits, proceed with deleting the data
-    const { p2w_id } = request.params; // Assuming you have an identifier in your route
+    const { p2w_id } = request.params;
 
-    const index = realmsData.findIndex((realm) => realm.p2w_id === parseInt(p2w_id, 10));
+    const parsedP2WId = parseInt(p2w_id, 10);
+
+    if (isNaN(parsedP2WId)) {
+        return new Response('Invalid p2w_id', {
+            status: 400,
+            headers: {
+                'Content-Type': 'text/plain',
+            },
+        });
+    }
+
+    const index = realmsData.findIndex((realm) => realm.p2w_id === parsedP2WId);
 
     if (index !== -1) {
         const deletedServer = realmsData.splice(index, 1)[0];
