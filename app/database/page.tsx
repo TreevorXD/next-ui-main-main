@@ -12,7 +12,13 @@ import {
   Spinner,
   Tooltip,
   Input,
-  Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure
+  Modal,
+  ModalContent, 
+  ModalHeader, 
+  ModalBody, 
+  ModalFooter, 
+  useDisclosure,
+  User
 } from "@nextui-org/react";
 import { useAsyncList } from "@react-stately/data";
 import { Montserrat } from 'next/font/google'
@@ -236,6 +242,14 @@ export default function App() {
                 <p className="text-amber-500"> 
                   Servers that are colored yellow are marked becuase the owner has done something questionable
                 </p>
+                <User   
+      name="Treevor"
+      description="Developer"
+      avatarProps={{
+        src: "https://cdn.discordapp.com/avatars/1068316524470874173/0b2dab3d3bee4d9fd92d61b75cbb24c9.png?size=1024"
+      }}
+    />
+
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>
