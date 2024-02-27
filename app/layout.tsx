@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Anti P2W',
-  description: 'Anti Pay To Win: Bedrock Movement'
+  description: 'Anti P2W Movement: Bedrock Edition'
 }
 
 export default function RootLayout({
