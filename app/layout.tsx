@@ -21,8 +21,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={inter.className}>
-      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5323398300828688"
-     crossorigin="anonymous"></script>
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5323398300828688"></script>
         <Providers>
           
           <header className='py-6'>
