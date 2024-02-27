@@ -1,7 +1,6 @@
 // apiKeys.js
 export const apiKeys = [
   'dev',
-  //'your_api_key_2',
   'ABCDE-12345-FGHIJ-67890',
   'KLMNO-54321-PQRST-09876',
   'UVWXY-24680-ZABCD-13579',
