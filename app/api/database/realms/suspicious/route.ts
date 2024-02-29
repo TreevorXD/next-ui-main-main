@@ -1,16 +1,16 @@
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
+import { NextResponse } from "next/server";
+import connect from "../../../../../db";
+import Server from "../../../../../models/Servers";
 import { apiKeys } from '../../../authKeys';
 import { config } from 'dotenv';
 import fetch from 'node-fetch';
+
 config();
 
-const rows = require('../../../../database/serverData');
+const requestLimits = new Map<string, number>();
+const discordWebhookURL = process.env.WEBHOOK as string;
 
-const requestLimits = new Map();
-const discordWebhookURL = process.env.WEBHOOK;
-
-async function sendDiscordWebhook(ipAddress, authKey) {
+async function sendDiscordWebhook(ipAddress: string, authKey: string): Promise<void> {
     const webhookData = {
         content: `Rate limit exceeded!\nIP Address: ${ipAddress}\nAuth Key: ${authKey}`,
     };
@@ -24,46 +24,52 @@ async function sendDiscordWebhook(ipAddress, authKey) {
     });
 }
 
-export async function GET(request: Request) {
-    const authHeader = request.headers.get('Authorization');
+export const GET = async (request: Request): Promise<Response> => {
+    try {
+        await connect();
 
-    if (!authHeader || !apiKeys.includes(authHeader)) {
-        return new Response('Unauthorized', {
-            status: 401,
+        const authHeader = request.headers.get('Authorization');
+
+        if (!authHeader || !apiKeys.includes(authHeader)) {
+            return new NextResponse('Unauthorized', {
+                status: 401,
+                headers: {
+                    'Content-Type': 'text/plain',
+                },
+            });
+        }
+
+        const clientIP = request.headers.get('CF-Connecting-IP');
+        const requestCount = requestLimits.get(clientIP) || 0;
+
+        if (requestCount >= 5) {
+            await sendDiscordWebhook(clientIP as string, authHeader);
+            return new NextResponse('Rate Limit Exceeded', {
+                status: 429,
+                headers: {
+                    'Content-Type': 'text/plain',
+                },
+            });
+        }
+
+        requestLimits.set(clientIP as string, requestCount + 1);
+
+        setTimeout(() => {
+            requestLimits.delete(clientIP as string);
+        }, 10000);
+
+        // Fetch only the dangerous servers from MongoDB
+        const dangerousServers = await Server.find({ dangerous: true });
+
+        const responseBody = JSON.stringify(dangerousServers);
+
+        return new NextResponse(responseBody, {
+            status: 200,
             headers: {
-                'Content-Type': 'text/plain',
+                'Content-Type': 'application/json',
             },
         });
+    } catch (error) {
+        return new NextResponse("Error in fetching posts" + error, { status: 500 });
     }
-
-    const clientIP = request.headers.get('CF-Connecting-IP');
-    const requestCount = requestLimits.get(clientIP) || 0;
-
-    if (requestCount >= 5) {
-        await sendDiscordWebhook(clientIP, authHeader);
-        return new Response('Rate Limit Exceeded', {
-            status: 429,
-            headers: {
-                'Content-Type': 'text/plain',
-            },
-        });
-    }
-
-    requestLimits.set(clientIP, requestCount + 1);
-
-    setTimeout(() => {
-        requestLimits.delete(clientIP);
-    }, 10000);
-
-    // Filter only the dangerous servers
-    const dangerousServers = rows.filter((realm) => realm.dangerous);
-
-    const responseBody = JSON.stringify(dangerousServers);
-
-    return new Response(responseBody, {
-        status: 200,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
-}
+};

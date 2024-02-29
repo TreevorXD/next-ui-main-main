@@ -59,22 +59,22 @@ export const GET = async (request: Request): Promise<Response> => {
         }, 10000);
 
         const url = new URL(request.url);
-        const discordNameParam = url.searchParams.get('discord_name');
+        const realmCodeParam = url.searchParams.get('realm_code');
 
         // Create a filter object based on query parameters
         const filters: Record<string, any> = {};
 
-        if (discordNameParam) {
-            // Filter by discord_name if provided (case-insensitive and not exact match)
-            filters.discord_name = { $regex: new RegExp(discordNameParam, 'i') };
+        if (realmCodeParam) {
+            // Filter by realm_code if provided
+            filters.realm_code = realmCodeParam;
         }
 
         // Add more logic for additional query parameters as needed
 
         // Fetch realms from MongoDB with applied filters
-        const filteredRows = await Server.find(filters);
+        const filteredServers = await Server.find(filters);
 
-        const responseBody = JSON.stringify(filteredRows);
+        const responseBody = JSON.stringify(filteredServers);
 
         return new NextResponse(responseBody, {
             status: 200,
