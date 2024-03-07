@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { Button } from '@nextui-org/button';
 import { useRouter } from 'next/navigation';
 import { Montserrat } from 'next/font/google';
-
 const montserrat = Montserrat({
   weight: '600',
   subsets: ['latin'],
@@ -209,7 +208,7 @@ export default function App() {
         <li className='pb-10'>
           <Image
             className='inline animate-custom-pulse rounded-lg mt-10'
-            src="/../images/logo3.png"
+            src="../public/images/logo3.png"
             width={900}
             height={900}
             alt="antip2w"
