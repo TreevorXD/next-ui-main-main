@@ -259,6 +259,7 @@ export default function App() {
                     Servers that are colored yellow are marked because the owner has done something questionable
                   </p>
                   <User   
+                  
                     name="Treevor"
                     description="Developer"
                     avatarProps={{
