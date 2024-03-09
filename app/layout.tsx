@@ -5,9 +5,6 @@ import Providers from './providers'
 import Link from 'next/link'
 import ThemeSwitcher from './components/ThemeSwitcher'
 import Image from 'next/image'
-import { ClerkProvider } from '@clerk/nextjs'
-import { UserButton } from "@clerk/nextjs";
-import { dark } from '@clerk/themes';
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -15,15 +12,13 @@ export const metadata: Metadata = {
   description: 'Anti P2W Movement: Bedrock Edition'
 }
 
+
 export default function RootLayout({
   children
 }: {
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider      appearance={{
-      baseTheme: dark
-    }}>
       <html lang='en'>
         <body className={inter.className}>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5323398300828688"></script>
@@ -33,7 +28,7 @@ export default function RootLayout({
             <header className='py-6'>
 
               <nav className='container flex items-center'>
-              <UserButton />
+    
                 <ul>
                   <li className='inline pl-10 pr-10'>
                   <Link className='z-0 group relative inline-flex items-center justify-center box-border appearance-none select-none whitespace-nowrap font-normal subpixel-antialiased overflow-hidden tap-highlight-transparent outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 border-medium bg-transparent px-unit-6 min-w-unit-24 h-unit-12 text-medium gap-unit-3 rounded-large [&>svg]:max-w-[theme(spacing.unit-8)] data-[pressed=true]:scale-[0.97] transition-transform-colors-opacity motion-reduce:transition-none border-default text-default-foreground hover:!bg-default' href="/"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -51,6 +46,5 @@ export default function RootLayout({
           </Providers>
         </body>
       </html>
-    </ClerkProvider>
   )
 }
