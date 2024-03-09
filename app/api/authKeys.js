@@ -1,8 +1,8 @@
 // apiKeys.js
 export const apiKeys = [
-  "qRRiRVIda4",
-  "XHepTGEMKG",
-  "B0ys0DVG7h",
+  "qRRiRVIda4", // Trevor
+  "XHepTGEMKG", // Bros
+  "B0ys0DVG7h", // Herm
   "q5VLqNQBZu",
   "bjY8foyWPS",
   "0zvjD3DACk",

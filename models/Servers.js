@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const { Schema } = mongoose;
+const {Schema} = mongoose;
 
 const serverSchema = new Schema({
     key: {
@@ -52,9 +52,9 @@ const serverSchema = new Schema({
         required: false,
     },
     dangerous: {
-        type: Boolean,
+        type: String,
         required: false,
     },
-}, { timestamps: true });
+}, {timestamps: true})
 
 export default mongoose.models.Server || mongoose.model("Server", serverSchema);
