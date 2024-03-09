@@ -208,7 +208,7 @@ export default function App() {
         <li className='pb-10'>
           <Image
             className='inline animate-custom-pulse rounded-lg mt-10'
-            src="/../images/logo3.png"
+            src="/../images/logo.png"
             width={900}
             height={900}
             alt="antip2w"
