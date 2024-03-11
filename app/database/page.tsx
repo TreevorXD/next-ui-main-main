@@ -226,7 +226,7 @@ export default function App() {
         {/* Add search input */}
         <Image
           className='items-center mb-3'
-          src="/../images/rounded.png"
+          src="/../rounded.png"
           width={400}
           height={400}
           alt="antip2w"
