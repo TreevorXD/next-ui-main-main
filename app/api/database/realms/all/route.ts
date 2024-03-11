@@ -7,7 +7,6 @@ import { apiKeys } from '../../../authKeys'; // Update the path accordingly
 import { config } from 'dotenv';
 import fetch from 'node-fetch';
 
-config();
 
 interface WebhookData {
     content: string;

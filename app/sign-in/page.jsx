@@ -9,7 +9,6 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
   const router = useRouter()
-
   const handleSignIn = async () => {
     try {
         const res = await signInWithEmailAndPassword(email, password);
@@ -17,7 +16,7 @@ const SignIn = () => {
         sessionStorage.setItem('user', true)
         setEmail('');
         setPassword('');
-        router.push('/dashboard')
+        router.push('/')
     }catch(e){
         console.error(e)
     }

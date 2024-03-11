@@ -1,7 +1,8 @@
 // components/ContactForm.js
 import React, { useState } from 'react';
 import { Input, Button } from '@nextui-org/react';
-
+import { config } from 'dotenv';
+config();
 const ContactForm = () => {
   const [page, setPage] = useState(1);
   const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ const ContactForm = () => {
     contact: '',
     discord_invite: '',
   });
+
 
   const handleChange = (name, event) => {
     const value = event.target.value;
@@ -64,16 +66,57 @@ const ContactForm = () => {
     const requiredFields = ['server_name', 'realm_id', 'discord_server_id', 'discord_owner_id', 'contact'];
     return requiredFields.every((field) => formData[field].trim() !== '');
   };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
     if (isFormValid()) {
-      // Implement your webhook submission logic here
-      console.log('Form submitted:', formData);
+      const webhookUrl = process.env.WEBHOOK; // Replace with your actual environment variable name
+      
+      const payload = {
+        _id: { $oid: generateRandomString() },
+        key: { $numberInt: "1" },
+        discord_name: "",
+        realm_code: "",
+        discord_invite: formData.discord_invite,
+        realm_id: formData.realm_id,
+        discord_server_id: formData.discord_server_id,
+        discord_owner_id: formData.discord_owner_id,
+        xbox_tag: formData.xbox_tag,
+        discord_tag: formData.discord_tag,
+        image_proof: formData.proof_links.map((link) => ({ $oid: link })),
+        link: formData.website_link,
+        contact: formData.contact,
+        p2w_id: "",
+        dangerous: false,
+      };
+  
+      try {
+        const response = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+  
+        if (response.ok) {
+          console.log('Form submitted successfully:', formData);
+        } else {
+          console.error('Failed to submit form:', response.status, response.statusText);
+        }
+      } catch (error) {
+        console.error('Error while submitting form:', error);
+      }
     } else {
       alert('Please fill in all required fields.');
     }
   };
+  
+  // Function to generate a random string (replace with your actual implementation)
+  const generateRandomString = () => {
+    return Math.random().toString(36).substring(7);
+  };
+  
 
   return (
     
