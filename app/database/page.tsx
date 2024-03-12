@@ -190,9 +190,14 @@ export default function App() {
     fetchData();
   }, []);
 
-  const list = useAsyncList<Item>({
-    items: data,
+  const list = useAsyncList<Item, string>({
+    async load({ signal }) {
+      return {
+        items: data,
+      };
+    },
   });
+  
 
   const filterItems = (items: Item[], searchTerm: string) => {
     const normalizedSearchTerm = searchTerm.toString().toLowerCase();
