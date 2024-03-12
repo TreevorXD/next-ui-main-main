@@ -1,5 +1,5 @@
 'use client'
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from 'next/image';
 import {
   Table,
@@ -25,8 +25,6 @@ import {
 } from "@nextui-org/react";
 import { useAsyncList } from "@react-stately/data";
 import { Montserrat } from 'next/font/google';
-
-const rows = require('../database/serverData'); // Assuming rows is an array of objects
 
 const montserrat = Montserrat({
   weight: '600',
@@ -167,45 +165,38 @@ const columns = [
 ];
 
 export default function App() {
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [data, setData] = useState<Item[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("https://antip2w.com/api/database/realms/all", {
+          headers: {
+            Authorization: "q5VLqNQBZu",
+          },
+        });
+        const result = await response.json();
+        setData(result);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const list = useAsyncList<Item>({
-    async load({ signal }) {
-      setIsLoading(false);
-      // Assuming rows is an array of objects
-      return {
-        items: rows,
-      };
-    },
-    async sort({ items, sortDescriptor }) {
-      if (sortDescriptor && 'column' in sortDescriptor && typeof sortDescriptor.column === 'string') {
-        return {
-          items: items.slice().sort((a, b) => {
-            let first = (a as { [key: string]: string | number })[sortDescriptor.column!];
-            let second = (b as { [key: string]: string | number })[sortDescriptor.column!];
-            let cmp =
-              (parseInt(first as string) || first) < (parseInt(second as string) || second) ? -1 : 1;
-
-            if (sortDescriptor.direction === "descending") {
-              cmp *= -1;
-            }
-
-            return cmp;
-          }),
-        };
-      } else {
-        // Handle the case where sortDescriptor.column is not available
-        // You can return the items as is or handle it in a different way based on your requirements
-        return { items };
-      }
-    },
+    items: data,
   });
 
   const filterItems = (items: Item[], searchTerm: string) => {
     const normalizedSearchTerm = searchTerm.toString().toLowerCase();
-    
+
     return items.filter((item) => {
       for (const key in item) {
         if (Object.prototype.hasOwnProperty.call(item, key)) {
@@ -223,7 +214,6 @@ export default function App() {
   return (
     <main className={montserrat.className}>
       <div className="w-full flex justify-center items-center flex-col">
-        {/* Add search input */}
         <Image
           className='items-center mb-3'
           src="/../rounded.png"
@@ -234,7 +224,7 @@ export default function App() {
         <div>
           <h1 className="float-left text-center text-4xl mb-5 pr-5">P2W Realms Database</h1>
         </div>
-          
+
         <Input
           className="w-5/6 mb-5 md:w-1/2"
           placeholder="Search Anything"
@@ -259,7 +249,6 @@ export default function App() {
                     Servers that are colored yellow are marked because the owner has done something questionable
                   </p>
                   <User   
-                  
                     name="Treevor"
                     description="Developer"
                     avatarProps={{

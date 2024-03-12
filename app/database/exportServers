@@ -1,0 +1,20 @@
+const getRealmsData = require('./serverData');
+
+async function exportRealmsData() {
+  try {
+    // Call the function to get realms data from MongoDB
+    const realmsData = await getRealmsData();
+
+    // Modify the data to exclude the _id field
+    const exportedData = realmsData.map(({ _id, ...rest }) => rest);
+
+    // Log or process the exported data
+    console.log('Exported Realms Data:', exportedData);
+  } catch (error) {
+    // Handle errors
+    console.error('Error exporting realms data:', error);
+  }
+}
+
+// Call the export function
+exportRealmsData();

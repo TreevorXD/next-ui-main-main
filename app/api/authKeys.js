@@ -1,9 +1,9 @@
 // apiKeys.js
 export const apiKeys = [
+  "q5VLqNQBZu", // SERVER (DO NOT USE)
   "qRRiRVIda4", // Trevor
   "XHepTGEMKG", // Bros
   "B0ys0DVG7h", // Herm
-  "q5VLqNQBZu",
   "bjY8foyWPS",
   "0zvjD3DACk",
   "oboNCFl3Zu",
