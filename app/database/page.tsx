@@ -189,8 +189,9 @@ export default function App() {
 
     fetchData();
   }, []);
+
   const list = useAsyncList<Item>({
-    fetch: async () => data, // Provide your data through the fetch function
+    items: data,
   });
 
   const filterItems = (items: Item[], searchTerm: string) => {
