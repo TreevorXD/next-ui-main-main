@@ -35,7 +35,7 @@ async function sendDiscordWebhook(ipAddress: string, authKey: string): Promise<v
 export const GET = async (request: Request): Promise<Response> => {
     try {
         await connect();
-        const servers = await Server.find();
+        let servers = await Server.find();
 
         // Step 1: Check for Authorization header
         const authHeader = request.headers.get('Authorization');
@@ -77,6 +77,12 @@ export const GET = async (request: Request): Promise<Response> => {
         }, 10000); // 10 seconds in milliseconds
 
         // If authorized and within rate limits, proceed with fetching the data
+        servers = servers.map(server => {
+            // Remove the _id field from each server
+            const { _id, ...serverWithoutId } = server.toObject();
+            return serverWithoutId;
+        });
+
         const responseBody = JSON.stringify(servers);
 
         return new NextResponse(responseBody, {
