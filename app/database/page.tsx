@@ -1,5 +1,4 @@
-'use client'
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from 'next/image';
 import {
   Table,
@@ -25,8 +24,6 @@ import {
 } from "@nextui-org/react";
 import { useAsyncList } from "@react-stately/data";
 import { Montserrat } from 'next/font/google';
-
-const rows = require('../database/serverData'); // Assuming rows is an array of objects
 
 const montserrat = Montserrat({
   weight: '600',
@@ -167,41 +164,33 @@ const columns = [
 ];
 
 export default function App() {
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [rows, setRows] = useState<Item[]>([]);
 
-  const list = useAsyncList<Item>({
-    async load({ signal }) {
-      setIsLoading(false);
-      // Assuming rows is an array of objects
-      return {
-        items: rows,
-      };
-    },
-    async sort({ items, sortDescriptor }) {
-      if (sortDescriptor && 'column' in sortDescriptor && typeof sortDescriptor.column === 'string') {
-        return {
-          items: items.slice().sort((a, b) => {
-            let first = (a as { [key: string]: string | number })[sortDescriptor.column!];
-            let second = (b as { [key: string]: string | number })[sortDescriptor.column!];
-            let cmp =
-              (parseInt(first as string) || first) < (parseInt(second as string) || second) ? -1 : 1;
-
-            if (sortDescriptor.direction === "descending") {
-              cmp *= -1;
-            }
-
-            return cmp;
-          }),
-        };
-      } else {
-        // Handle the case where sortDescriptor.column is not available
-        // You can return the items as is or handle it in a different way based on your requirements
-        return { items };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("https://antip2w.com/api/database/realms/all", {
+          headers: {
+            Authorization: "q5VLqNQBZu"
+          }
+        });
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await response.json();
+        setRows(data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setIsLoading(false);
       }
-    },
-  });
+    };
+
+    fetchData();
+  }, []);
 
   const filterItems = (items: Item[], searchTerm: string) => {
     const normalizedSearchTerm = searchTerm.toString().toLowerCase();
@@ -218,7 +207,7 @@ export default function App() {
       return false;
     });
   };
-  const filteredItems = filterItems(list.items, searchTerm);
+  const filteredItems = filterItems(rows, searchTerm);
 
   return (
     <main className={montserrat.className}>
@@ -281,8 +270,6 @@ export default function App() {
         </Modal>
         <Table
           className="w-full md:w-5/6 mt-5"
-          sortDescriptor={list.sortDescriptor}
-          onSortChange={list.sort}
           aria-label="pay to win realm database"
           color="default"
           selectionMode="single"
