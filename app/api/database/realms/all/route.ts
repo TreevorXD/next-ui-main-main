@@ -46,6 +46,9 @@ export const GET = async (request: Request): Promise<Response> => {
                 status: 401,
                 headers: {
                     'Content-Type': 'text/plain',
+                    'Access-Control-Allow-Origin': '*', // Allow requests from any origin
+                    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', // Allow these HTTP methods
+                    'Access-Control-Allow-Headers': 'Authorization, Content-Type', // Allow these headers
                 },
             });
         }
@@ -64,6 +67,9 @@ export const GET = async (request: Request): Promise<Response> => {
                 status: 429,
                 headers: {
                     'Content-Type': 'text/plain',
+                    'Access-Control-Allow-Origin': '*', // Allow requests from any origin
+                    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', // Allow these HTTP methods
+                    'Access-Control-Allow-Headers': 'Authorization, Content-Type', // Allow these headers
                 },
             });
         }
@@ -89,6 +95,9 @@ export const GET = async (request: Request): Promise<Response> => {
             status: 200, // Specify the desired HTTP status code (e.g., 200 for OK)
             headers: {
                 'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*', // Allow requests from any origin
+                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', // Allow these HTTP methods
+                'Access-Control-Allow-Headers': 'Authorization, Content-Type', // Allow these headers
             },
         });
     } catch (error) {
