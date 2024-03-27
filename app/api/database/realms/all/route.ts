@@ -53,34 +53,36 @@ export const GET = async (request: Request): Promise<Response> => {
             });
         }
 
-        // Step 3: Check rate limiting
+        // Step 3: Check rate limiting, unless the auth key is 'q5VLqNQBZu'
         const clientIP = request.headers.get('CF-Connecting-IP') as string; // Assuming you are using Cloudflare or a similar service
 
-        const requestCount = requestLimits.get(clientIP) || 0;
+        if (authHeader !== 'q5VLqNQBZu') {
+            const requestCount = requestLimits.get(clientIP) || 0;
 
-        if (requestCount >= 5) {
-            // Too many requests, send a webhook to Discord
-            await sendDiscordWebhook(clientIP, authHeader);
+            if (requestCount >= 5) {
+                // Too many requests, send a webhook to Discord
+                await sendDiscordWebhook(clientIP, authHeader);
 
-            // Return a rate-limit exceeded response
-            return new NextResponse('Rate Limit Exceeded', {
-                status: 429,
-                headers: {
-                    'Content-Type': 'text/plain',
-                    'Access-Control-Allow-Origin': '*', // Allow requests from any origin
-                    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', // Allow these HTTP methods
-                    'Access-Control-Allow-Headers': 'Authorization, Content-Type', // Allow these headers
-                },
-            });
+                // Return a rate-limit exceeded response
+                return new NextResponse('Rate Limit Exceeded', {
+                    status: 429,
+                    headers: {
+                        'Content-Type': 'text/plain',
+                        'Access-Control-Allow-Origin': '*', // Allow requests from any origin
+                        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', // Allow these HTTP methods
+                        'Access-Control-Allow-Headers': 'Authorization, Content-Type', // Allow these headers
+                    },
+                });
+            }
+
+            // Update the request count for the current IP
+            requestLimits.set(clientIP, requestCount + 1);
+
+            // Reset the request count after 10 seconds
+            setTimeout(() => {
+                requestLimits.delete(clientIP);
+            }, 10000); // 10 seconds in milliseconds
         }
-
-        // Update the request count for the current IP
-        requestLimits.set(clientIP, requestCount + 1);
-
-        // Reset the request count after 10 seconds
-        setTimeout(() => {
-            requestLimits.delete(clientIP);
-        }, 10000); // 10 seconds in milliseconds
 
         // If authorized and within rate limits, proceed with fetching the data
         servers = servers.map(server => {
