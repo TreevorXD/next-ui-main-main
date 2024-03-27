@@ -208,16 +208,18 @@ const [sortDescriptor, setSortDescriptor] = useState<SetStateAction<SortDescript
     const normalizedSearchTerm = searchTerm.toString().toLowerCase();
     
     // Sort the items based on sortDescriptor
-    const sortedItems = items.slice().sort((a, b) => {
-      if (a[sortDescriptor.column] === b[sortDescriptor.column]) {
-        return 0;
-      }
-      if (sortDescriptor.direction === 'ascending') {
-        return a[sortDescriptor.column] > b[sortDescriptor.column] ? 1 : -1;
-      } else {
-        return a[sortDescriptor.column] < b[sortDescriptor.column] ? 1 : -1;
-      }
-    });
+    // Sort the items based on sortDescriptor
+const sortedItems = items.slice().sort((a, b) => {
+  if (a[sortDescriptor?.column] === b[sortDescriptor?.column]) {
+    return 0;
+  }
+  if (sortDescriptor && sortDescriptor.direction === 'ascending') {
+    return a[sortDescriptor.column] > b[sortDescriptor.column] ? 1 : -1;
+  } else {
+    return a[sortDescriptor.column] < b[sortDescriptor.column] ? 1 : -1;
+  }
+});
+
   
     return sortedItems.filter((item) => {
       for (const key in item) {
