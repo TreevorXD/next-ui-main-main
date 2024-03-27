@@ -210,6 +210,7 @@ const [sortDescriptor, setSortDescriptor] = useState<SetStateAction<SortDescript
     // Sort the items based on sortDescriptor
     // Sort the items based on sortDescriptor
 // Sort the items based on sortDescriptor
+// Sort the items based on sortDescriptor
 const sortedItems = items.slice().sort((a, b) => {
   const columnA = sortDescriptor?.column;
   const columnB = sortDescriptor?.column;
@@ -219,9 +220,9 @@ const sortedItems = items.slice().sort((a, b) => {
   }
 
   if (sortDescriptor && sortDescriptor.direction === 'ascending') {
-    return columnA && columnB ? a[columnA] > b[columnB] ? 1 : -1 : 0;
+    return columnA && columnB ? (a[columnA] > b[columnB] ? 1 : -1) : 0;
   } else {
-    return columnA && columnB ? a[columnA] < b[columnB] ? 1 : -1 : 0;
+    return columnA && columnB ? (a[columnA] < b[columnB] ? 1 : -1) : 0;
   }
 });
 
