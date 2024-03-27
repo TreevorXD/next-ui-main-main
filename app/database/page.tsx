@@ -1,5 +1,7 @@
 'use client'
 import React, { useState, useEffect } from "react";
+import { SetStateAction } from 'react';
+
 import Image from 'next/image';
 import {
   Table,
@@ -176,7 +178,7 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [rows, setRows] = useState<Item[]>([]);
-  const [sortDescriptor, setSortDescriptor] = useState<SetStateAction<SortDescriptor<Item>>>({ column: '', direction: 'ascending' });
+const [sortDescriptor, setSortDescriptor] = useState<SetStateAction<SortDescriptor<Item>>>({ column: '', direction: 'ascending' });
 
 
   useEffect(() => {
