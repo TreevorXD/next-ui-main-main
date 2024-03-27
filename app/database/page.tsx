@@ -176,7 +176,8 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [rows, setRows] = useState<Item[]>([]);
-  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor<Item>>({ column: '', direction: 'ascending' });
+  const [sortDescriptor, setSortDescriptor] = useState<SetStateAction<SortDescriptor<Item>>>({ column: '', direction: 'ascending' });
+
 
   useEffect(() => {
     const fetchData = async () => {
