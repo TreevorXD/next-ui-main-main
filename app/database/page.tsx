@@ -292,8 +292,9 @@ export default function App() {
     color="default"
     selectionMode="single"
     sortDescriptor={sortDescriptor.column ? sortDescriptor : { column: '', direction: 'ascending' }} // Ensure sortDescriptor is always an object
-    onSortChange={setSortDescriptor} // Pass setSortDescriptor to handle sorting changes
->
+    onSortChange={(descriptor) => setSortDescriptor(descriptor)} // Wrap setSortDescriptor in a function
+    >
+
                <TableHeader columns={columns}>
   {(column) => (
     <TableColumn allowsSorting key={column.key}>{column.label}</TableColumn>
