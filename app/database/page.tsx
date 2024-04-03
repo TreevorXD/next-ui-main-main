@@ -178,7 +178,9 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [rows, setRows] = useState<Item[]>([]);
-const [sortDescriptor, setSortDescriptor] = useState<SetStateAction<SortDescriptor<Item>>>({ column: '', direction: 'ascending' });
+  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor<Item>>({ column: '', direction: 'ascending' });
+
+
 
 
   useEffect(() => {
@@ -302,9 +304,10 @@ const sortedItems = items.slice().sort((a, b) => {
   aria-label="pay to win realm database"
   color="default"
   selectionMode="single"
-  sortDescriptor={sortDescriptor} // Pass sortDescriptor directly
-  onSortChange={(descriptor) => setSortDescriptor(descriptor)} // Update sortDescriptor directly
+  sortDescriptor={sortDescriptor}
+  onSortChange={(descriptor) => setSortDescriptor(descriptor)}
 >
+
 
 
                <TableHeader columns={columns}>
