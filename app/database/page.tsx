@@ -305,7 +305,7 @@ const sortedItems = items.slice().sort((a, b) => {
   color="default"
   selectionMode="single"
   sortDescriptor={sortDescriptor}
-  onSortChange={(descriptor) => setSortDescriptor(descriptor)}
+  onSortChange={(descriptor: SortDescriptor<Item>) => setSortDescriptor(descriptor)}
 >
 
 
