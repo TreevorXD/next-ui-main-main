@@ -302,8 +302,8 @@ const sortedItems = items.slice().sort((a, b) => {
   aria-label="pay to win realm database"
   color="default"
   selectionMode="single"
-  sortDescriptor={sortDescriptor.column ? sortDescriptor : { column: '', direction: 'ascending' }} // Ensure sortDescriptor is always an object
-  onSortChange={(descriptor) => setSortDescriptor(descriptor)} // Wrap setSortDescriptor in a function
+  sortDescriptor={sortDescriptor} // Pass sortDescriptor directly
+  onSortChange={(descriptor) => setSortDescriptor(descriptor)} // Update sortDescriptor directly
 >
 
 
