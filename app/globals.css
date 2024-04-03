@@ -3,6 +3,6 @@
 @tailwind utilities;
 
 .danger-row {
-    background-color: #9f7f4e; /* Set your desired color */
+    background-color: #000000; /* Set your desired color */
     border-radius: 5rem;
   }
