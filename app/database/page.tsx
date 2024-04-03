@@ -298,13 +298,14 @@ const sortedItems = items.slice().sort((a, b) => {
                 </ModalContent>
             </Modal>
             <Table
-    className="w-full md:w-5/6 mt-5"
-    aria-label="pay to win realm database"
-    color="default"
-    selectionMode="single"
-    sortDescriptor={sortDescriptor.column ? sortDescriptor : { column: '', direction: 'ascending' }} // Ensure sortDescriptor is always an object
-    onSortChange={(descriptor) => setSortDescriptor(descriptor)} // Wrap setSortDescriptor in a function
-    >
+  className="w-full md:w-5/6 mt-5"
+  aria-label="pay to win realm database"
+  color="default"
+  selectionMode="single"
+  sortDescriptor={sortDescriptor.column ? sortDescriptor : { column: '', direction: 'ascending' }} // Ensure sortDescriptor is always an object
+  onSortChange={(descriptor) => setSortDescriptor(descriptor)} // Wrap setSortDescriptor in a function
+>
+
 
                <TableHeader columns={columns}>
   {(column) => (
