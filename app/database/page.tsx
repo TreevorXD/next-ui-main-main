@@ -181,31 +181,29 @@ export default function App() {
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor<Item>>({ column: '', direction: 'ascending' });
 
 
-
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://cors-anywhere.herokuapp.com/https://antip2w.com/api/database/realms/all", {
+        const response = await fetch('https://antip2w.com/api/database/realms/all', {
+          mode: 'no-cors', // Set mode to 'no-cors
           headers: {
-            Authorization: "q5VLqNQBZu"
+            Authorization: 'q5VLqNQBZu'
           }
         });
         if (!response.ok) {
-          throw new Error("Failed to fetch data");
+          throw new Error('Failed to fetch data');
         }
         const data = await response.json();
-        setRows(data);
+        setRows([data]); // Assuming the response data needs to be wrapped in an array
         setIsLoading(false);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
         setIsLoading(false);
       }
     };
 
     fetchData();
   }, []);
-
   const filterItems = (items: Item[], searchTerm: string) => {
     const normalizedSearchTerm = searchTerm.toString().toLowerCase();
     
