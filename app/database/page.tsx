@@ -185,7 +185,6 @@ export default function App() {
     const fetchData = async () => {
       try {
         const response = await fetch('https://antip2w.com/api/database/realms/all', {
-          mode: 'no-cors', // Set mode to 'no-cors
           headers: {
             Authorization: 'q5VLqNQBZu'
           }

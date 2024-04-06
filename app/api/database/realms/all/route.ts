@@ -6,7 +6,7 @@ import { resolve } from 'path';
 import { apiKeys } from '../../../authKeys'; // Update the path accordingly
 import { config } from 'dotenv';
 import fetch from 'node-fetch';
-
+import NextCors from 'nextjs-cors';
 
 interface WebhookData {
     content: string;
@@ -32,29 +32,29 @@ async function sendDiscordWebhook(ipAddress: string, authKey: string): Promise<v
     });
 }
 
-export const GET = async (request: Request): Promise<Response> => {
+export default async function handler(req, res) {
     try {
+        // Run the cors middleware
+        await NextCors(req, res, {
+            // Options
+            methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+            origin: '*',
+            optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+        });
+
         await connect();
         let servers = await Server.find();
 
         // Step 1: Check for Authorization header
-        const authHeader = request.headers.get('Authorization');
+        const authHeader = req.headers.authorization;
 
         if (!authHeader || !apiKeys.includes(authHeader)) {
             // Step 2: If Authorization header is missing or invalid key, return unauthorized
-            return new NextResponse('Unauthorized', {
-                status: 401,
-                headers: {
-                    'Content-Type': 'text/plain',
-                    'Access-Control-Allow-Origin': '*', // Allow requests from any origin
-                    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', // Allow these HTTP methods
-                    'Access-Control-Allow-Headers': 'Authorization, Content-Type', // Allow these headers
-                },
-            });
+            return res.status(401).send('Unauthorized');
         }
 
         // Step 3: Check rate limiting, unless the auth key is 'q5VLqNQBZu'
-        const clientIP = request.headers.get('CF-Connecting-IP') as string; // Assuming you are using Cloudflare or a similar service
+        const clientIP = req.headers['cf-connecting-ip'] as string; // Assuming you are using Cloudflare or a similar service
 
         if (authHeader !== 'q5VLqNQBZu') {
             const requestCount = requestLimits.get(clientIP) || 0;
@@ -64,15 +64,7 @@ export const GET = async (request: Request): Promise<Response> => {
                 await sendDiscordWebhook(clientIP, authHeader);
 
                 // Return a rate-limit exceeded response
-                return new NextResponse('Rate Limit Exceeded', {
-                    status: 429,
-                    headers: {
-                        'Content-Type': 'text/plain',
-                        'Access-Control-Allow-Origin': '*', // Allow requests from any origin
-                        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', // Allow these HTTP methods
-                        'Access-Control-Allow-Headers': 'Authorization, Content-Type', // Allow these headers
-                    },
-                });
+                return res.status(429).send('Rate Limit Exceeded');
             }
 
             // Update the request count for the current IP
@@ -93,16 +85,8 @@ export const GET = async (request: Request): Promise<Response> => {
 
         const responseBody = JSON.stringify(servers);
 
-        return new NextResponse(responseBody, {
-            status: 200, // Specify the desired HTTP status code (e.g., 200 for OK)
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*', // Allow requests from any origin
-                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', // Allow these HTTP methods
-                'Access-Control-Allow-Headers': 'Authorization, Content-Type', // Allow these headers
-            },
-        });
+        return res.status(200).json(responseBody);
     } catch (error) {
-        return new NextResponse("Error in fetching posts" + error, { status: 500 });
+        return res.status(500).send("Error in fetching posts" + error);
     }
-};
+}

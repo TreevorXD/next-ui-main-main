@@ -33,6 +33,7 @@
     "next": "^13.5.6",
     "next-swagger-doc": "^0.4.0",
     "next-themes": "^0.2.1",
+    "nextjs-cors": "^2.2.0",
     "node.js": "^0.0.1-security",
     "path": "^0.12.7",
     "postcss": "^8.4.35",
