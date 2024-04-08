@@ -6,7 +6,7 @@ import { resolve } from 'path';
 import { apiKeys } from '../../../authKeys'; // Update the path accordingly
 import { config } from 'dotenv';
 import fetch from 'node-fetch';
-
+import NextCors from 'nextjs-cors';
 
 interface WebhookData {
     content: string;

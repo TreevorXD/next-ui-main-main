@@ -184,7 +184,7 @@ export default function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://antip2w.com/api/database/realms/all', {
+        const response = await fetch('https://api.codetabs.com/v1/proxy/?quest=https://antip2w.com/api/database/realms/all', {
           headers: {
             Authorization: 'q5VLqNQBZu'
           }
@@ -341,5 +341,4 @@ const sortedItems = items.slice().sort((a, b) => {
     </main>
 );
 }
-
 
