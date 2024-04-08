@@ -184,7 +184,7 @@ export default function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://antip2w.com/api/database/realms/all', {
+        const response = await fetch('https://main--antip2wdb.netlify.app/api/database/realms/all', {
           headers: {
             Authorization: 'q5VLqNQBZu'
           }
