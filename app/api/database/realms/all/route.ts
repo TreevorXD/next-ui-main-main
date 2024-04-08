@@ -44,12 +44,7 @@ export const GET = async (request: Request): Promise<Response> => {
             // Step 2: If Authorization header is missing or invalid key, return unauthorized
             return new NextResponse('Unauthorized', {
                 status: 401,
-                headers: {
-                    'Content-Type': 'text/plain',
-                    'Access-Control-Allow-Origin': '*', // Allow requests from any origin
-                    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', // Allow these HTTP methods
-                    'Access-Control-Allow-Headers': 'Authorization, Content-Type', // Allow these headers
-                },
+                
             });
         }
 
@@ -66,12 +61,6 @@ export const GET = async (request: Request): Promise<Response> => {
                 // Return a rate-limit exceeded response
                 return new NextResponse('Rate Limit Exceeded', {
                     status: 429,
-                    headers: {
-                        'Content-Type': 'text/plain',
-                        'Access-Control-Allow-Origin': '*', // Allow requests from any origin
-                        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', // Allow these HTTP methods
-                        'Access-Control-Allow-Headers': 'Authorization, Content-Type', // Allow these headers
-                    },
                 });
             }
 
@@ -96,13 +85,6 @@ export const GET = async (request: Request): Promise<Response> => {
         // Return response with CORS headers allowing credentials
 return new NextResponse(responseBody, {
     status: 200,
-    headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Allow requests from any origin
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', // Allow these HTTP methods
-        'Access-Control-Allow-Headers': 'Authorization, Content-Type', // Allow these headers
-        'Access-Control-Allow-Credentials': 'true', // Allow credentials
-    },
 });
 
     } catch (error) {
