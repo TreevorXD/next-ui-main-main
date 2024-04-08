@@ -181,28 +181,31 @@ export default function App() {
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor<Item>>({ column: '', direction: 'ascending' });
 
 
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://main--antip2wdb.netlify.app/api/database/realms/all', {
+        const response = await fetch("https://corsproxy.io/?https://antip2w.com/api/database/realms/all", {
           headers: {
-            Authorization: 'q5VLqNQBZu'
+            Authorization: "q5VLqNQBZu"
           }
         });
         if (!response.ok) {
-          throw new Error('Failed to fetch data');
+          throw new Error("Failed to fetch data");
         }
         const data = await response.json();
-        setRows([data]); // Assuming the response data needs to be wrapped in an array
+        setRows(data);
         setIsLoading(false);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
         setIsLoading(false);
       }
     };
 
     fetchData();
   }, []);
+
   const filterItems = (items: Item[], searchTerm: string) => {
     const normalizedSearchTerm = searchTerm.toString().toLowerCase();
     
