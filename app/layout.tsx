@@ -24,7 +24,6 @@ export default function RootLayout({
       <html lang='en'>
         <body className={inter.className}>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5323398300828688"></script>
-        <script src="https://www.google.com/recaptcha/enterprise.js?render=6Le1WL8pAAAAAHiwhepxkwM9y_KbxV4A9sPXwGWU"></script>
           <Providers>
       
             <header className='py-6'>
