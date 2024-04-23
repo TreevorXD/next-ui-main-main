@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import connect from "../../../../../db";
-import Server from "../../../../../models/Servers";
-import { apiKeys } from '../../../authKeys';
+import connect from "../../../../db";
+import Server from "../../../../models/Servers";
+import { apiKeys } from '../../authKeys';
 import { config } from 'dotenv';
 import fetch from 'node-fetch';
 
@@ -58,10 +58,10 @@ export const GET = async (request: Request): Promise<Response> => {
             requestLimits.delete(clientIP as string);
         }, 10000);
 
-        // Fetch only the dangerous servers from MongoDB
-        const dangerousServers = await Server.find({ dangerous: true });
+        // Fetch all unique discord_owner_ids from MongoDB
+        const discordOwnerIds = await Server.distinct("discord_owner_id");
 
-        const responseBody = JSON.stringify(dangerousServers);
+        const responseBody = JSON.stringify(discordOwnerIds);
 
         return new NextResponse(responseBody, {
             status: 200,
@@ -70,6 +70,6 @@ export const GET = async (request: Request): Promise<Response> => {
             },
         });
     } catch (error) {
-        return new NextResponse("Error in fetching posts" + error, { status: 500 });
+        return new NextResponse("Error in processing request: " + error.message, { status: 500 });
     }
 };

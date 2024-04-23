@@ -1,9 +1,9 @@
-// pages/protected-page.tsx
 'use client'
 import { useEffect, useState } from 'react';
 import { auth } from '../firebase/config'; // Import your Firebase configuration
 
-const allowedUid = 'BAglnIBTEoT1mSC0I397LRllMm73'; // Replace with the UID you want to allow access
+// Array of allowed UIDs
+const allowedUids = ['AohsbxeW2pWIsAfTiCQAtJKga3k2', '4JNPKmw9cjQDKVbMjP5ceJpmxO82']; // Add other UIDs as needed
 
 const ProtectedPage = () => {
   const [user, setUser] = useState(null);
@@ -11,8 +11,8 @@ const ProtectedPage = () => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
-        // Check if the user's UID matches the allowed UID
-        if (authUser.uid !== allowedUid) {
+        // Check if the user's UID is in the allowed UIDs array
+        if (!allowedUids.includes(authUser.uid)) {
           // Redirect to a page indicating no permission
           window.location.href = '/'; // Replace with your no-permission page route
         } else {
