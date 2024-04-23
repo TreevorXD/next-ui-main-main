@@ -1,6 +1,6 @@
 // pages/form.tsx
-'use client'
-import { useState, FormEvent } from 'react';
+'use client'// Corrected to use strict
+import React, { useState, FormEvent, ChangeEvent } from 'react';
 import { useAuth } from '../hooks/useAuth';
 
 interface FormData {
@@ -35,10 +35,11 @@ export default function FormPage() {
     dangerous: "false",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setFormData(prevFormData => ({
       ...prevFormData,
-      [e.target.name]: e.target.value
+      [name]: value
     }));
   };
 
@@ -55,10 +56,9 @@ export default function FormPage() {
     <div className="flex justify-center items-center h-screen">
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col">
         {Object.entries(formData).map(([key, value]) => (
-          <div className="mb-4">
+          <div className="mb-4" key={key}>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              key={key}
               name={key}
               value={value}
               onChange={handleChange}
