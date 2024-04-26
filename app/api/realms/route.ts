@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import connect from "../../../../../db";
-import Server from "../../../../../models/Servers";
+import connect from "../../../db";
+import Server from "../../../models/Servers";
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { config } from 'dotenv';
@@ -58,13 +58,6 @@ export const GET = async (request: Request): Promise<Response> => {
         setTimeout(() => {
             requestLimits.delete(clientIP);
         }, 10000); // 10 seconds in milliseconds
-
-        // If within rate limits, proceed with fetching the data
-        servers = servers.map(server => {
-            // Remove the _id field from each server
-            const { _id, ...serverWithoutId } = server.toObject();
-            return serverWithoutId;
-        });
 
         const responseBody = JSON.stringify(servers);
 

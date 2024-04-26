@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import connect from "../../../../../../db";
-import Server from "../../../../../../models/Servers";
-import { apiKeys } from '../../../../authKeys';
+import connect from "../../../../../db";
+import Server from "../../../../../models/Servers";
+import { apiKeys } from '../../../authKeys';
 import { config } from 'dotenv';
 import fetch from 'node-fetch';
 
@@ -59,22 +59,32 @@ export const GET = async (request: Request): Promise<Response> => {
         }, 10000);
 
         const url = new URL(request.url);
-        const realmCodeParam = url.searchParams.get('realm_code');
+        const realmIdParam = url.searchParams.get('realm_id');
 
-        // Create a filter object based on query parameters
-        const filters: Record<string, any> = {};
-
-        if (realmCodeParam) {
-            // Filter by realm_code if provided
-            filters.realm_code = realmCodeParam;
+        if (!realmIdParam) {
+            // If realm_id is not provided, return a bad request response
+            return new NextResponse('Bad Request - realm_id parameter is required', {
+                status: 400,
+                headers: {
+                    'Content-Type': 'text/plain',
+                },
+            });
         }
 
-        // Add more logic for additional query parameters as needed
+        // Find the server data with the matching realm_id from MongoDB
+        const foundRealm = await Server.findOne({ realm_id: realmIdParam });
 
-        // Fetch realms from MongoDB with applied filters
-        const filteredServers = await Server.find(filters);
+        if (!foundRealm) {
+            // If no matching realm is found, return a not found response
+            return new NextResponse('Realm not found', {
+                status: 404,
+                headers: {
+                    'Content-Type': 'text/plain',
+                },
+            });
+        }
 
-        const responseBody = JSON.stringify(filteredServers);
+        const responseBody = JSON.stringify(foundRealm);
 
         return new NextResponse(responseBody, {
             status: 200,
