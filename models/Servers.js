@@ -1,8 +1,6 @@
-import mongoose from "mongoose";
+import * as Mongoose from "mongoose";
 
-const {Schema} = mongoose;
-
-const serverSchema = new Schema({
+const serverSchema = new Mongoose.Schema({
     key: {
         type: String,
         required: true
@@ -55,6 +53,8 @@ const serverSchema = new Schema({
         type: String,
         required: false,
     },
-}, {timestamps: true})
+});
 
-export default mongoose.models.Server || mongoose.model("Server", serverSchema);
+const ServerModel = Mongoose.models.servers || Mongoose.model("servers", serverSchema);
+
+export default ServerModel;

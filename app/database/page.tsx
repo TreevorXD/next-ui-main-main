@@ -198,7 +198,7 @@ export default function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://corsproxy.io/?https://antip2w.com/api/database/realms/all", {
+        const response = await fetch("../api/realms", {
           headers: {
             Authorization: "q5VLqNQBZu"
           }
