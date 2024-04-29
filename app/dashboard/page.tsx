@@ -97,9 +97,6 @@ const ProtectedPage = () => {
             if (response.ok) {
                 // Refresh the data after insertion
                 const updatedResponse = await fetch("../api/realms", {
-                    headers: {
-                        Authorization: "q5VLqNQBZu"
-                    }
                 });
                 const updatedData = await updatedResponse.json();
                 setRows(updatedData);

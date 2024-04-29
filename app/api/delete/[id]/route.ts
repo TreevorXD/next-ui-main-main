@@ -1,11 +1,17 @@
-// route.ts
 import ServerModel from "../../../../models/Servers";
 import { dbConnect, disconnect } from "@/app/lib/db";
 import fetch from "node-fetch"; // Import fetch for making HTTP requests
+import { devKeys } from "../../devKeys"; // Import devKeys array
 
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
     const con = await dbConnect();
     const { id } = params;
+
+    // Extract authorization token from headers
+    const authHeader = request.headers.get("Authorization");
+    if (!authHeader || !isValidKey(authHeader)) {
+        return new Response("Unauthorized", { status: 401 });
+    }
 
     // Get the server information before deleting it
     const serverToDelete = await ServerModel.findById(id);
@@ -18,7 +24,12 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     await logToDiscordWebhook(webhookURL, id, serverToDelete);
 
     // Respond with a JSON object containing the id parameter
-    return Response.json({ id });
+    return new Response(JSON.stringify({ id }), { status: 200, headers: { "Content-Type": "application/json" } });
+}
+
+function isValidKey(key: string): boolean {
+    // Check if the provided key exists in the devKeys array
+    return devKeys.includes(key.replace("Bearer ", ""));
 }
 
 async function logToDiscordWebhook(webhookURL: string, deletedServerId: string, serverInfo: any) {

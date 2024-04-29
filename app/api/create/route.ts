@@ -10,9 +10,10 @@ export async function POST(request: Request) {
         const con = await dbConnect();
         // Parse the request body as JSON to extract the data
         const body = await request.json();
-
-        // Check if the provided key is valid
-        if (!devKeys.includes(body.key)) {
+        
+        // Extract authorization token from headers
+        const authHeader = request.headers.get("Authorization");
+        if (!authHeader || !isValidKey(authHeader)) {
             return new Response("Unauthorized", { status: 401 });
         }
 
@@ -46,6 +47,11 @@ export async function POST(request: Request) {
         console.error("Error:", error);
         return new Response("Internal Server Error", { status: 500 });
     }
+}
+
+function isValidKey(key: string): boolean {
+    // Check if the provided key exists in the devKeys array
+    return devKeys.includes(key.replace("Bearer ", ""));
 }
 
 async function logToDiscordWebhook(webhookURL: string, newServer: any) {
