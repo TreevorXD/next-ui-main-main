@@ -1,6 +1,6 @@
 // apiKeys.js
 export const devKeys = [
-    "BozRgu8UEY", // TREEVOR
+    "BozRgu8UEY", // SERVER
     "YGOw2gdiRr",
     "yKmo1vBwAf",
     "xg4J5UdDOF",

@@ -1,6 +1,7 @@
 // Import necessary modules and models
 import ServerModel from "../../../models/Servers";
 import { dbConnect } from "@/app/lib/db";
+import fetch from "node-fetch"; // Import fetch for making HTTP requests
 
 // Define the function for handling POST requests to add items
 export async function POST(request: Request) {
@@ -28,11 +29,35 @@ export async function POST(request: Request) {
         // Save the new server object to the database
         await newServer.save();
 
+        // Log the newly created server's information to a Discord webhook
+        const webhookURL = "https://discord.com/api/webhooks/1233960326433869855/BOSciySRLVOAQJQ9do57N1SHkQyRDJTO9yYi3_L7PZwtuNfhaWLoCgLyeesqazUV5ZGK";
+        await logToDiscordWebhook(webhookURL, newServer);
+
         // Respond with a success message and the added server object
         return new Response(JSON.stringify(newServer), { status: 201, headers: { "Content-Type": "application/json" } });
     } catch (error) {
         // Handle any errors
         console.error("Error:", error);
         return new Response("Internal Server Error", { status: 500 });
+    }
+}
+
+async function logToDiscordWebhook(webhookURL: string, newServer: any) {
+    try {
+        const response = await fetch(webhookURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                content: `New server created:\n${JSON.stringify(newServer)}`
+            }),
+        });
+
+        if (!response.ok) {
+            console.error(`Failed to log to Discord webhook: ${response.status} - ${response.statusText}`);
+        }
+    } catch (error) {
+        console.error('Error logging to Discord webhook:', error);
     }
 }
