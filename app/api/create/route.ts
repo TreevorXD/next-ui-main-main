@@ -2,6 +2,7 @@
 import ServerModel from "../../../models/Servers";
 import { dbConnect } from "@/app/lib/db";
 import fetch from "node-fetch"; // Import fetch for making HTTP requests
+import { devKeys } from "../devKeys"; // Import devKeys array
 
 // Define the function for handling POST requests to add items
 export async function POST(request: Request) {
@@ -9,6 +10,11 @@ export async function POST(request: Request) {
         const con = await dbConnect();
         // Parse the request body as JSON to extract the data
         const body = await request.json();
+
+        // Check if the provided key is valid
+        if (!devKeys.includes(body.key)) {
+            return new Response("Unauthorized", { status: 401 });
+        }
 
         // Create a new server object using the provided data
         const newServer = new ServerModel({
