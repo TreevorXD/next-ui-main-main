@@ -2,7 +2,7 @@
 import ServerModel from "../../../../models/Servers";
 import { dbConnect } from "@/app/lib/db";
 import fetch from "node-fetch"; // Import fetch for making HTTP requests
-import { devKeys } from "../../devKeys"; // Import devKeys array
+import KeyModel from "../../../../models/Keys";
 
 // Define the function for handling POST requests to update server values
 export async function POST(request: Request, { params }: { params: { id: string } }) {
@@ -46,9 +46,17 @@ export async function POST(request: Request, { params }: { params: { id: string 
     }
 }
 
-function isValidKey(key: string): boolean {
-    // Check if the provided key exists in the devKeys array
-    return devKeys.includes(key.replace("Bearer ", ""));
+async function isValidKey(key: string): Promise<boolean> {
+    try {
+        // Query the database collection for the key
+        const keyDocument = await KeyModel.findOne({ key: key.replace("Bearer ", "") }).exec();
+        
+        // If the key document exists, return true, else return false
+        return !!keyDocument;
+    } catch (error) {
+        console.error('Error validating key:', error);
+        return false; // Return false in case of any error
+    }
 }
 
 async function logToDiscordWebhook(webhookURL: string, updatedServer: any) {
