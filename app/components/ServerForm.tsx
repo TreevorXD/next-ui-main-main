@@ -37,11 +37,11 @@ const ServerForm: React.FC<Props> = ({ onSubmit }) => {
     key: "",
   });
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
     setFormData(prevFormData => ({
       ...prevFormData,
-      [name]: value
+      [name]: type === 'checkbox' ? e.target.checked : value
     }));
   };
 
@@ -54,13 +54,26 @@ const ServerForm: React.FC<Props> = ({ onSubmit }) => {
     <form onSubmit={handleSubmit} >
       {Object.entries(formData).map(([key, value]) => (
         <div className="mb-4" key={key}>
-          <input
-            className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            name={key}
-            value={value}
-            onChange={handleChange}
-            placeholder={key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
-          />
+          {key === 'dangerous' ? (
+            <select
+  className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+  name={key}
+  value={value.toString()} // Convert boolean to string
+  onChange={handleChange}
+>
+  <option value="true">True</option>
+  <option value="false">False</option>
+</select>
+
+          ) : (
+            <input
+              className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              name={key}
+              value={value}
+              onChange={handleChange}
+              placeholder={key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
+            />
+          )}
         </div>
       ))}
       <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
