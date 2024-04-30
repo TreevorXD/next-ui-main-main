@@ -1,8 +1,8 @@
 // Import necessary modules and models
-import ServerModel from "../../../models/Servers";
+import ServerModel from "../../../../models/Servers";
 import { dbConnect } from "@/app/lib/db";
 import fetch from "node-fetch"; // Import fetch for making HTTP requests
-import { devKeys } from "../devKeys"; // Import devKeys array
+import { devKeys } from "../../devKeys"; // Import devKeys array
 
 // Define the function for handling POST requests to update server values
 export async function POST(request: Request, { params }: { params: { id: string } }) {
