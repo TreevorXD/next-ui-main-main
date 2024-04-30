@@ -39,12 +39,14 @@ const ServerForm: React.FC<Props> = ({ onSubmit }) => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
+    const target = e.target as HTMLInputElement; // Narrow down the type of e.target
+  
     setFormData(prevFormData => ({
       ...prevFormData,
-      [name]: type === 'checkbox' ? e.target.checked : value
+      [name]: type === 'checkbox' ? target.checked : value
     }));
   };
-
+  
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
