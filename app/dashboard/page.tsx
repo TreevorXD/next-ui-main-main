@@ -272,7 +272,7 @@ const ProtectedPage = () => {
             </div>
 
             {/* Modal for editing */}
-            <Modal isOpen={isOpen} onClose={onClose} size={modalSize}>
+            <Modal isOpen={isOpen} onClose={onClose} size="2xl">
                 <ModalContent>
                     <ModalHeader>Edit Item</ModalHeader>
                     <ModalBody>
