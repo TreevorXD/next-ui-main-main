@@ -21,9 +21,9 @@ export async function POST(request: Request) {
         const newServer = new ServerModel({
             key: body.key,
             discord_name: body.discord_name,
-            realm_code: body.realm_code,
             discord_invite: body.discord_invite,
             realm_id: body.realm_id,
+            realm_code: body.realm_code,
             discord_server_id: body.discord_server_id,
             discord_owner_id: body.discord_owner_id,
             xbox_tag: body.xbox_tag,

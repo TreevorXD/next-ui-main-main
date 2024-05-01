@@ -1,3 +1,4 @@
+import ArchiveModel from "../../../../models/Archive";
 import ServerModel from "../../../../models/Servers";
 import { dbConnect, disconnect } from "@/app/lib/db";
 import fetch from "node-fetch"; // Import fetch for making HTTP requests
@@ -22,6 +23,8 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     // Log the deleted server's ID and server information to a Discord webhook
     const webhookURL = "https://discord.com/api/webhooks/1233959505394536500/saZx6CgA_GdaCI5l37FqOezCz9bTRPSTCIoXzmjQn6gMcHPNIYpal0750lQGy8Y6XA67";
     await logToDiscordWebhook(webhookURL, id, serverToDelete);
+
+    // Add the deleted server information to the archive database collection
 
     // Respond with a JSON object containing the id parameter
     return new Response(JSON.stringify({ id }), { status: 200, headers: { "Content-Type": "application/json" } });

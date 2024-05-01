@@ -1,6 +1,6 @@
 import * as Mongoose from "mongoose";
 
-const serverSchema = new Mongoose.Schema({
+const archiveSchema = new Mongoose.Schema({
     key: {
         type: String,
         required: true
@@ -14,10 +14,6 @@ const serverSchema = new Mongoose.Schema({
         required: false,
     },
     realm_id: {
-        type: String,
-        required: false,
-    },
-    realm_code: {
         type: String,
         required: false,
     },
@@ -59,6 +55,6 @@ const serverSchema = new Mongoose.Schema({
     },
 });
 
-const ServerModel = Mongoose.models.servers || Mongoose.model("servers", serverSchema);
+const ArchiveModel = Mongoose.models.archive || Mongoose.model("archive", archiveSchema);
 
-export default ServerModel;
+export default ArchiveModel;
