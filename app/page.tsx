@@ -205,7 +205,7 @@ export default function App() {
     <div className='w-full absolute flex justify-center'>
       <ul className='text-center pt-12'>
         <li className='mt-12'></li>
-        <li className='pb-10'>
+        <li className='pb-3'>
           <Image
             className='inline animate-custom-pulse rounded-lg mt-10'
             src="/../logo.png"
@@ -213,6 +213,7 @@ export default function App() {
             height={900}
             alt="antip2w"
           />
+                <p className='pt-3'>Message of the day!<br />"Fuck no I mean screw pay to win"</p>
         </li>
         <li className='pt-10 inline pl-5 pr-5'>
           <Button size='lg' variant='ghost' onClick={() => router.push('/database')}>
@@ -220,12 +221,17 @@ export default function App() {
           </Button>
         </li>
         <li className='pt-10 inline pl-5 pr-5'>
-          <Button size='lg' variant='ghost' onClick={() => router.push('https://discord.gg/antip2w')}>
+          <Button size='lg' variant='ghost' onClick={() => router.push('/report')}>
+            Report
+          </Button>
+        </li>
+        <li className='pt-10 inline pl-5 pr-5'>
+          <Button size='lg' variant='ghost' onClick={() => router.push('/discord')}>
             Discord
           </Button>
         </li>
         <li className='pt-10 inline pl-5 pr-5'>
-          <Button size='lg' variant='ghost' onClick={() => router.push('https://documenter.getpostman.com/view/33096435/2sA2rCV2oq')}>
+          <Button size='lg' variant='ghost' onClick={() => router.push('/api')}>
             API
           </Button>
         </li>

@@ -36,7 +36,7 @@ const SignUp = () => {
       setEmail('');
       setPassword('');
       setError('');
-      router.push('/sign-in');
+      router.push('/login');
     } catch (e) {
       setError('An error occurred. Please try again.');
       console.error(e);
@@ -72,7 +72,7 @@ const SignUp = () => {
           Sign Up
         </button>
         <button
-          onClick={() => router.push('/sign-in')}
+          onClick={() => router.push('/login')}
           className="mt-3 w-full p-3 bg-indigo-600 rounded text-white hover:bg-indigo-500"
         >
           Sign In

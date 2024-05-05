@@ -16,7 +16,7 @@ const SignIn = () => {
         sessionStorage.setItem('user', true)
         setEmail('');
         setPassword('');
-        router.push('/')
+        router.push('/dashboard')
     }catch(e){
         console.error(e)
     }
@@ -45,6 +45,12 @@ const SignIn = () => {
           className="w-full p-3 bg-indigo-600 rounded text-white hover:bg-indigo-500"
         >
           Sign In
+        </button>
+        <button
+          onClick={() => router.push('/sign-up')}
+          className="mt-3 w-full p-3 bg-indigo-600 rounded text-white hover:bg-indigo-500"
+        >
+          Sign Up
         </button>
       </div>
     </div>

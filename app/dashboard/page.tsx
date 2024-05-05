@@ -13,7 +13,6 @@ const ProtectedPage = () => {
     const [rows, setRows] = useState([]);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [modalSize, setModalSize] = useState("2xl");
-    // Add state to hold the item being edited
     const [editingItem, setEditingItem] = useState(null);
 
     useEffect(() => {
@@ -69,7 +68,6 @@ const ProtectedPage = () => {
                 method: 'DELETE',
                 headers: {
                     Authorization: 'BozRgu8UEY'
-                    // Add any other headers as needed
                 }
             });
             if (response.ok) {
@@ -79,7 +77,6 @@ const ProtectedPage = () => {
             }
         } catch (error) {
             console.error("Error deleting server:", error);
-            // Handle error
         }
     };
 
@@ -197,7 +194,7 @@ const ProtectedPage = () => {
     return (
         <main className="montserrat">
             <div className="w-full justify-center items-center flex-col">
-                <h1 className='pb-3'>Welcome</h1>
+                <h1 className='pb-3'>Welcome {user.email}</h1>
 
                 <Accordion>
                     <AccordionItem key="1" aria-label="Accordion 1" title="Server List (Expand)">

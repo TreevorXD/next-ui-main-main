@@ -10,7 +10,7 @@ const SignOut = () => {
         await auth.signOut();
         console.log('Signed Out');
         // Redirect to the desired page after successful sign out (e.g., home page).
-        window.location.href = '/dashboard'; // Replace with your desired destination.
+        window.location.href = '/'; // Replace with your desired destination.
       } catch (error) {
         console.error('Sign Out Error', error);
         // Handle sign out error, e.g., show an error message.
