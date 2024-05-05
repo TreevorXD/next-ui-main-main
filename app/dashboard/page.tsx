@@ -194,7 +194,8 @@ const ProtectedPage = () => {
     return (
         <main className="montserrat">
             <div className="w-full justify-center items-center flex-col">
-                <h1 className='pb-3'>Welcome {user.email}</h1>
+                <h1 className='pb-3'>Welcome{user ? user.email : 'Guest'}
+</h1>
 
                 <Accordion>
                     <AccordionItem key="1" aria-label="Accordion 1" title="Server List (Expand)">
