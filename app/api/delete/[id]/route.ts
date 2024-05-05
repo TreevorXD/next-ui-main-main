@@ -3,7 +3,7 @@ import ServerModel from "../../../../models/Servers";
 import { dbConnect, disconnect } from "@/app/lib/db";
 import fetch from "node-fetch"; // Import fetch for making HTTP requests
 import KeyModel from "../../../../models/Keys";
-
+export const dynamic = 'force-dynamic'
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
     const con = await dbConnect();
     const { id } = params;

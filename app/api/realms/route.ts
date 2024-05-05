@@ -1,7 +1,7 @@
 import { dbConnect, disconnect } from "@/app/lib/db";
 import { NextResponse } from "next/server";
 import ServerModel from "../../../models/Servers"; // Import your Server model
-
+export const dynamic = 'force-dynamic'
 export async function GET() {
   try {
     const con = await dbConnect();

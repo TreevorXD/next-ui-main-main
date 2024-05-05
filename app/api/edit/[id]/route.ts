@@ -3,7 +3,7 @@ import ServerModel from "../../../../models/Servers";
 import { dbConnect } from "@/app/lib/db";
 import fetch from "node-fetch"; // Import fetch for making HTTP requests
 import KeyModel from "../../../../models/Keys";
-
+export const dynamic = 'force-dynamic'
 // Define the function for handling POST requests to update server values
 export async function POST(request: Request, { params }: { params: { id: string } }) {
     try {
