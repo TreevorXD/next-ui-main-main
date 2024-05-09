@@ -115,28 +115,6 @@ const ProofLink = ({ value }: { value: string | string[] }) => (
 
 const columns = [
   {
-    key: "actions", // Unique key for the new column
-    label: "Actions", // Label for the column
-    render: (value: string, item: Item) => ( // Render a dropdown for each row
-      <DropdownMenu
-        aria-label="Action event example"
-        onAction={(key) => {
-          if (key === 'delete') {
-              handleDelete(item.key);
-          } else if (key === 'export') {
-              exportServerData(item);
-          } else if (key === 'edit') {
-              openModal(item); // Pass the item being edited to openModal
-          }
-        }}
-      >
-        <DropdownItem key="export">Export</DropdownItem>
-        <DropdownItem key="edit" className="text-warning" color="warning">Edit Item</DropdownItem>
-        <DropdownItem key="delete" className="text-danger" color="danger">Delete Item</DropdownItem>
-      </DropdownMenu>
-    ),
-  },
-  {
     key: "discord_name",
     label: "Name",
   },
@@ -234,66 +212,7 @@ const columns = [
   },
 ];
 
-const handleSaveChanges = async () => {
-  try {
-      // Check if editedItem is valid JSON
-      if (!isValidJSON) {
-          throw new Error("Invalid JSON format");
-      }
 
-      // Update the editingItem state only when submit button is clicked
-      setEditingItem(JSON.parse(editedItem));
-
-      const response = await fetch(`../api/edit/${editingItem._id}`, {
-          method: 'POST',
-          headers: {
-              Authorization: 'BozRgu8UEY', // Replace with your actual authorization token
-              'Content-Type': 'application/json',
-          },
-          body: editedItem // Send the edited JSON data
-      });
-      if (response.ok) {
-          const updatedResponse = await fetch("../api/realms", {
-              headers: {
-                  Authorization: "q5VLqNQBZu"
-              }
-          });
-          const updatedData = await updatedResponse.json();
-          setRows(updatedData);
-      } else {
-          throw new Error("Failed to save changes");
-      }
-  } catch (error) {
-      console.error("Error saving changes:", error);
-      // Handle error
-  }
-};
-
-const handleTextareaChange = (e) => {
-  // Update the editedItem state with the modified JSON content
-  const jsonString = e.target.value;
-  setEditedItem(jsonString); // Update editedItem state
-  // Validate JSON format
-  try {
-      JSON.parse(jsonString);
-      setIsValidJSON(true);
-  } catch (error) {
-      setIsValidJSON(false);
-  }
-};
-
-const exportServerData = (serverData) => {
-  const jsonServerData = JSON.stringify(serverData);
-  const blob = new Blob([jsonServerData], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'server_data.txt';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-};
 
 const DatabaseTable = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -462,7 +381,9 @@ const DatabaseTable = () => {
                     )}
                 </TableBody>
             </Table>
+                    
         </div>
+        
     );
 };
 

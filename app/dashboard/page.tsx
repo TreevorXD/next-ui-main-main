@@ -175,20 +175,6 @@ const ProtectedPage = () => {
         URL.revokeObjectURL(url);
     };
 
-    const columns = [
-        {
-            key: "discord_name",
-            label: "Name",
-        },
-        {
-            key: "realm_id",
-            label: "Realm ID",
-        },
-        {
-            key: "_id",
-            label: "Database ID",
-        },
-    ];
 
     const filterItems = (items, searchTerm) => {
         const normalizedSearchTerm = searchTerm.toString().toLowerCase();
@@ -223,35 +209,7 @@ const ProtectedPage = () => {
 
                             <DashboardTable />
 
-                                                <Dropdown>
-                                                    <DropdownTrigger>
-                                                        <Button
-                                                            variant="bordered"
-                                                            isIconOnly
-                                                            className='ml-2'
-                                                        >
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                                                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
-                                                            </svg>
-                                                        </Button>
-                                                    </DropdownTrigger>
-                                                    <DropdownMenu
-                                                        aria-label="Action event example"
-                                                        onAction={(key) => {
-                                                            if (key === 'delete') {
-                                                                handleDelete(item._id);
-                                                            } else if (key === 'export') {
-                                                                exportServerData(item);
-                                                            } else if (key === 'edit') {
-                                                                openModal(item); // Pass the item being edited to openModal
-                                                            }
-                                                        }}
-                                                    >
-                                                        <DropdownItem key="export">Export</DropdownItem>
-                                                        <DropdownItem key="edit" className="text-warning" color="warning">Edit Item</DropdownItem>
-                                                        <DropdownItem key="delete" className="text-danger" color="danger">Delete Item</DropdownItem>
-                                                    </DropdownMenu>
-                                                </Dropdown>
+                                    
                         
                         {/* End of Database Table */}
                     </AccordionItem>
@@ -260,28 +218,6 @@ const ProtectedPage = () => {
             </div>
 
             {/* Modal for editing */}
-            <Modal isOpen={isOpen} onClose={onClose} size="2xl">
-                <ModalContent>
-                    <ModalHeader>Edit Item</ModalHeader>
-                    <ModalBody>
-                        {editingItem && ( // Check if editingItem is not null
-                            <Textarea
-                                label="Edit JSON"
-                                placeholder="Start Editing the JSON"
-                                className="max-w-full"
-                                value={editedItem !== null ? editedItem : JSON.stringify(editingItem, null, 2)} // Use editedItem state if it's not null, otherwise, use JSONify the item being edited
-                                onChange={handleTextareaChange} // Add onChange handler
-                                invalid={!isValidJSON} // Apply invalid style if JSON is invalid
-                            />
-                        )}
-                        {!isValidJSON && <p className="text-danger">Invalid JSON format</p>}
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="primary" onClick={() => { handleSaveChanges(); onClose(); }}>Save Changes</Button>
-                        <Button color="secondary" onClick={onClose}>Cancel</Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
         </main>
     );
 };
