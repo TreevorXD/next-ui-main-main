@@ -1,8 +1,10 @@
+
 'use client'
 import React, { useState, useEffect } from "react";
 import { Dropdown, DropdownTrigger, DropdownMenu, Textarea, DropdownItem, Accordion, AccordionItem, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
 import ServerForm from '../components/ServerForm';
 import { auth } from '../firebase/config';
+import DashboardTable from '../components/DashboardTable';
 
 const allowedUids = ['AohsbxeW2pWIsAfTiCQAtJKga3k2', '4JNPKmw9cjQDKVbMjP5ceJpmxO82'];
 
@@ -14,6 +16,8 @@ const ProtectedPage = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [modalSize, setModalSize] = useState("2xl");
     const [editingItem, setEditingItem] = useState(null);
+    const [isValidJSON, setIsValidJSON] = useState(true); // State to track JSON validity
+    const [editedItem, setEditedItem] = useState(null); // State to track changes made by the user
 
     useEffect(() => {
         const fetchData = async () => {
@@ -109,15 +113,24 @@ const ProtectedPage = () => {
         }
     };
 
+    
     const handleSaveChanges = async () => {
         try {
+            // Check if editedItem is valid JSON
+            if (!isValidJSON) {
+                throw new Error("Invalid JSON format");
+            }
+
+            // Update the editingItem state only when submit button is clicked
+            setEditingItem(JSON.parse(editedItem));
+
             const response = await fetch(`../api/edit/${editingItem._id}`, {
                 method: 'POST',
                 headers: {
                     Authorization: 'BozRgu8UEY', // Replace with your actual authorization token
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(editingItem) // Send the edited JSON data
+                body: editedItem // Send the edited JSON data
             });
             if (response.ok) {
                 const updatedResponse = await fetch("../api/realms", {
@@ -137,8 +150,16 @@ const ProtectedPage = () => {
     };
     
     const handleTextareaChange = (e) => {
-        // Update the editingItem state with the modified JSON content
-        setEditingItem(JSON.parse(e.target.value));
+        // Update the editedItem state with the modified JSON content
+        const jsonString = e.target.value;
+        setEditedItem(jsonString); // Update editedItem state
+        // Validate JSON format
+        try {
+            JSON.parse(jsonString);
+            setIsValidJSON(true);
+        } catch (error) {
+            setIsValidJSON(false);
+        }
     };
 
     const exportServerData = (serverData) => {
@@ -188,44 +209,20 @@ const ProtectedPage = () => {
     const openModal = (item) => {
         setModalSize("2xl"); // Set modal size to 2xl
         setEditingItem(item); // Set the item being edited
+        setEditedItem(null); // Reset editedItem state
         onOpen();
     };
 
     return (
         <main className="montserrat">
             <div className="w-full justify-center items-center flex-col">
-                <h1 className='pb-3'>Welcome{user ? user.email : 'Guest'}
-</h1>
+                <h1 className='pb-3'>Welcome{user ? user.email : 'Guest'}</h1>
 
                 <Accordion>
                     <AccordionItem key="1" aria-label="Accordion 1" title="Server List (Expand)">
-                        {/* Database Table */}
-                        <input
-                            placeholder="Search Anything"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className='ml-10'
-                        />
-                        {isLoading ? (
-                            <div>Loading...</div>
-                        ) : (
-                            <table className='w-full'>
-                                <thead>
-                                    <tr>
-                                        {columns.map((column) => (
-                                            <th className='text-center' key={column.key}>{column.label}</th>
-                                        ))}
-                                        <th className='text-center'></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filterItems(rows, searchTerm).map((item, index) => (
-                                        <tr key={index}>
-                                            {columns.map((column) => (
-                                                <td className='pt-2 text-center' key={column.key}>{item[column.key]}
-                                                </td>
-                                            ))}
-                                            <td>
+
+                            <DashboardTable />
+
                                                 <Dropdown>
                                                     <DropdownTrigger>
                                                         <Button
@@ -255,17 +252,10 @@ const ProtectedPage = () => {
                                                         <DropdownItem key="delete" className="text-danger" color="danger">Delete Item</DropdownItem>
                                                     </DropdownMenu>
                                                 </Dropdown>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        )}
+                        
                         {/* End of Database Table */}
                     </AccordionItem>
-                    <AccordionItem key="2" aria-label="Accordion 1" title="Add Server (Expand)">
-                        <ServerForm onSubmit={handleInsert} />
-                    </AccordionItem>
+
                 </Accordion>
             </div>
 
@@ -274,19 +264,21 @@ const ProtectedPage = () => {
                 <ModalContent>
                     <ModalHeader>Edit Item</ModalHeader>
                     <ModalBody>
-    {editingItem && ( // Check if editingItem is not null
-        <Textarea
-            label="Edit JSON"
-            placeholder="Start Editing the JSON"
-            className="max-w-full"
-            value={JSON.stringify(editingItem, null, 2)} // JSONify the item being edited
-            onChange={handleTextareaChange} // Add onChange handler
-        />
-    )}
-</ModalBody>
+                        {editingItem && ( // Check if editingItem is not null
+                            <Textarea
+                                label="Edit JSON"
+                                placeholder="Start Editing the JSON"
+                                className="max-w-full"
+                                value={editedItem !== null ? editedItem : JSON.stringify(editingItem, null, 2)} // Use editedItem state if it's not null, otherwise, use JSONify the item being edited
+                                onChange={handleTextareaChange} // Add onChange handler
+                                invalid={!isValidJSON} // Apply invalid style if JSON is invalid
+                            />
+                        )}
+                        {!isValidJSON && <p className="text-danger">Invalid JSON format</p>}
+                    </ModalBody>
                     <ModalFooter>
-                    <Button color="primary" onClick={() => { handleSaveChanges(); onClose(); }}>Save Changes</Button>
-    <Button color="secondary" onClick={onClose}>Cancel</Button>
+                        <Button color="primary" onClick={() => { handleSaveChanges(); onClose(); }}>Save Changes</Button>
+                        <Button color="secondary" onClick={onClose}>Cancel</Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>

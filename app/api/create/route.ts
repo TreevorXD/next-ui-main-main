@@ -29,6 +29,7 @@ export async function POST(request: Request) {
             xbox_tag: body.xbox_tag,
             discord_tag: body.discord_tag,
             link: body.link,
+            image_proof: body.image_proof,
             p2w_id: body.p2w_id,
             dangerous: body.dangerous
         });

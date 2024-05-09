@@ -14,11 +14,11 @@ const serverSchema = new Mongoose.Schema({
         required: false,
     },
     realm_id: {
-        type: String,
+        type: [String],
         required: false,
     },
     realm_code: {
-        type: String,
+        type: [String],
         required: false,
     },
     discord_server_id: {
@@ -38,11 +38,11 @@ const serverSchema = new Mongoose.Schema({
         required: false,
     },
     image_proof: {
-        type: String,
+        type: [String],
         required: false,
     },
     link: {
-        type: String,
+        type: [String],
         required: false,
     },
     contact: {

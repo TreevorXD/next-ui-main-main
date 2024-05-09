@@ -98,10 +98,6 @@ const LinkRenderer = ({ value, renderer, excludeLinks }: { value: string | strin
   </div>
 );
 
-
-
-
-
 const ProofLink = ({ value }: { value: string | string[] }) => (
   <LinkRenderer
     value={value}
@@ -114,28 +110,6 @@ const ProofLink = ({ value }: { value: string | string[] }) => (
 );
 
 const columns = [
-  {
-    key: "actions", // Unique key for the new column
-    label: "Actions", // Label for the column
-    render: (value: string, item: Item) => ( // Render a dropdown for each row
-      <DropdownMenu
-        aria-label="Action event example"
-        onAction={(key) => {
-          if (key === 'delete') {
-              handleDelete(item.key);
-          } else if (key === 'export') {
-              exportServerData(item);
-          } else if (key === 'edit') {
-              openModal(item); // Pass the item being edited to openModal
-          }
-        }}
-      >
-        <DropdownItem key="export">Export</DropdownItem>
-        <DropdownItem key="edit" className="text-warning" color="warning">Edit Item</DropdownItem>
-        <DropdownItem key="delete" className="text-danger" color="danger">Delete Item</DropdownItem>
-      </DropdownMenu>
-    ),
-  },
   {
     key: "discord_name",
     label: "Name",
@@ -234,78 +208,13 @@ const columns = [
   },
 ];
 
-const handleSaveChanges = async () => {
-  try {
-      // Check if editedItem is valid JSON
-      if (!isValidJSON) {
-          throw new Error("Invalid JSON format");
-      }
-
-      // Update the editingItem state only when submit button is clicked
-      setEditingItem(JSON.parse(editedItem));
-
-      const response = await fetch(`../api/edit/${editingItem._id}`, {
-          method: 'POST',
-          headers: {
-              Authorization: 'BozRgu8UEY', // Replace with your actual authorization token
-              'Content-Type': 'application/json',
-          },
-          body: editedItem // Send the edited JSON data
-      });
-      if (response.ok) {
-          const updatedResponse = await fetch("../api/realms", {
-              headers: {
-                  Authorization: "q5VLqNQBZu"
-              }
-          });
-          const updatedData = await updatedResponse.json();
-          setRows(updatedData);
-      } else {
-          throw new Error("Failed to save changes");
-      }
-  } catch (error) {
-      console.error("Error saving changes:", error);
-      // Handle error
-  }
-};
-
-const handleTextareaChange = (e) => {
-  // Update the editedItem state with the modified JSON content
-  const jsonString = e.target.value;
-  setEditedItem(jsonString); // Update editedItem state
-  // Validate JSON format
-  try {
-      JSON.parse(jsonString);
-      setIsValidJSON(true);
-  } catch (error) {
-      setIsValidJSON(false);
-  }
-};
-
-const exportServerData = (serverData) => {
-  const jsonServerData = JSON.stringify(serverData);
-  const blob = new Blob([jsonServerData], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'server_data.txt';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-};
-
-const DatabaseTable = () => {
+const DashboardTable = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [rows, setRows] = useState<Item[]>([]);
     const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor<Item>>({ column: '', direction: 'ascending' });
-  
-    
 
-  
-  
     useEffect(() => {
       const fetchData = async () => {
         try {
@@ -328,7 +237,7 @@ const DatabaseTable = () => {
   
       fetchData();
     }, []);
-  
+
     const filterItems = (items: Item[], searchTerm: string) => {
       const normalizedSearchTerm = searchTerm.toString().toLowerCase();
     
@@ -433,32 +342,32 @@ const DatabaseTable = () => {
                 >
                     {(item: Item) => (
                         <TableRow
-                        key={item.key}
-                        className={item.dangerous ? 'danger-row' : ''}
-                      >
-                        {(columnKey) => {
-                          const column = columns.find((col) => col.key === columnKey);
-                          const value = item[columnKey] as string | string[] | boolean;
-                          return (
-                            <TableCell>
-                              {column && column.render
-                                ? (column.render as (value: string | boolean | string[], item: Item) => React.ReactNode)(
-                                    value,
-                                    item
-                                  )
-                                : Array.isArray(value)
-                                ? (
-                                    <ul>
-                                      {value.map((item, index) => (
-                                        <li key={index}>{item}</li>
-                                      ))}
-                                    </ul>
-                                  )
-                                : value}
-                            </TableCell>
-                          );
-                        }}
-                      </TableRow>
+                            key={item.key}
+                            className={item.dangerous ? 'danger-row' : ''}
+                        >
+                            {(columnKey) => {
+                                const column = columns.find((col) => col.key === columnKey);
+                                const value = item[columnKey] as string | string[] | boolean;
+                                return (
+                                  <TableCell>
+                                  {column && column.render
+                                    ? (column.render as (value: string | boolean | string[]) => React.ReactNode)(
+                                        value
+                                      )
+                                    : Array.isArray(value)
+                                    ? (
+                                        <ul>
+                                          {value.map((item, index) => (
+                                            <li key={index}>{item}</li>
+                                          ))}
+                                        </ul>
+                                      )
+                                    : value}
+                                </TableCell>
+                                
+                                );
+                            }}
+                        </TableRow>
                     )}
                 </TableBody>
             </Table>
@@ -466,4 +375,4 @@ const DatabaseTable = () => {
     );
 };
 
-export default DatabaseTable;
+export default DashboardTable;
