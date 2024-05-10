@@ -25,6 +25,7 @@ import {
 } from "@nextui-org/react";
 import { Montserrat } from 'next/font/google';
 import Link from 'next/link'
+import ServerForm from './ServerForm';
 
 const montserrat = Montserrat({
   weight: '600',
@@ -120,12 +121,16 @@ const columns = [
           <Button variant="bordered">Actions</Button>
         </DropdownTrigger>
         <DropdownMenu aria-label="Actions">
-          <DropdownItem onClick={() => handleDelete(item.key)}>Delete</DropdownItem>
+          <DropdownItem onClick={() => handleDelete(item._id)}>Delete</DropdownItem>
           <DropdownItem onClick={() => exportServerData(item)}>Export</DropdownItem>
           <DropdownItem onClick={() => openModal(item)}>Edit</DropdownItem>
         </DropdownMenu>
       </Dropdown>
     ),
+  },
+  {
+    key: "_id",
+    label: "Database ID",
   },
   {
     key: "discord_name",
@@ -234,6 +239,7 @@ const DashboardTable = () => {
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [isValidJSON, setIsValidJSON] = useState(true);
   const [editedItem, setEditedItem] = useState<string | null>(null);
+  const { isOpen: isSecondModalOpen, onOpen: onSecondModalOpen, onClose: onSecondModalClose } = useDisclosure(); // New modal state
 
   useEffect(() => {
     const fetchData = async () => {
@@ -258,21 +264,21 @@ const DashboardTable = () => {
     fetchData();
   }, []);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (_id: string) => {
     const isConfirmed = window.confirm("Are you sure you want to delete this item?");
     if (!isConfirmed) {
       return;
     }
-
+  
     try {
-      const response = await fetch(`../api/delete/${id}`, {
+      const response = await fetch(`../api/delete/${_id}`, {
         method: 'DELETE',
         headers: {
           Authorization: 'BozRgu8UEY'
         }
       });
       if (response.ok) {
-        setRows(rows.filter(item => item._id !== id));
+        setRows(rows.filter(item => item._id !== _id));
       } else {
         throw new Error("Failed to delete server");
       }
@@ -280,7 +286,6 @@ const DashboardTable = () => {
       console.error("Error deleting server:", error);
     }
   };
-
   const exportServerData = (serverData: Item) => {
     const jsonServerData = JSON.stringify(serverData);
     const blob = new Blob([jsonServerData], { type: 'application/json' });
@@ -379,17 +384,29 @@ const DashboardTable = () => {
 
   return (
     <div className="flex flex-col items-center overflow-auto">
+      {/* New button and modal */}
+      <Button onClick={onSecondModalOpen} className="mb-5">Add Server</Button>
+      <Modal isOpen={isSecondModalOpen} onClose={onSecondModalClose}  scrollBehavior="inside" size="2xl">
+        <ModalContent>
+          <ModalHeader>Add Server</ModalHeader>
+          <ModalBody>
+            <ServerForm />
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onPress={onSecondModalClose}>Close</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {/* Search input */}
       <Input
         className="w-full md:w-1/2 mb-5"
         placeholder="Search Anything"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-      <Button onPress={onOpen}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 016 16">
-          <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
-        </svg>
-      </Button>
+      
+      {/* First modal for editing items */}
       <Modal isOpen={isOpen} onClose={onClose} size="2xl">
         <ModalContent>
           <ModalHeader>Edit Item</ModalHeader>
@@ -412,6 +429,8 @@ const DashboardTable = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      {/* Table component */}
       <Table
         className="w-full mt-5"
         aria-label="pay to win realm database"

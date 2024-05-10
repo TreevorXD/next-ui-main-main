@@ -18,6 +18,7 @@ const ProtectedPage = () => {
     const [editingItem, setEditingItem] = useState(null);
     const [isValidJSON, setIsValidJSON] = useState(true); // State to track JSON validity
     const [editedItem, setEditedItem] = useState(null); // State to track changes made by the user
+    
 
     useEffect(() => {
         const fetchData = async () => {
@@ -207,7 +208,7 @@ const ProtectedPage = () => {
                 <Accordion>
                     <AccordionItem key="1" aria-label="Accordion 1" title="Server List (Expand)">
 
-                            <DashboardTable />
+                            <DashboardTable  />
 
                                     
                         
