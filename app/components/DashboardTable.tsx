@@ -121,7 +121,8 @@ const columns = [
           <Button variant="bordered">Actions</Button>
         </DropdownTrigger>
         <DropdownMenu aria-label="Actions">
-          <DropdownItem onClick={() => handleDelete(item._id)}>Delete</DropdownItem>
+        <DropdownItem onClick={() => handleDelete(item._id)}>Delete</DropdownItem>
+
           <DropdownItem onClick={() => exportServerData(item)}>Export</DropdownItem>
           <DropdownItem onClick={() => openModal(item)}>Edit</DropdownItem>
         </DropdownMenu>
@@ -269,7 +270,7 @@ const DashboardTable = () => {
     if (!isConfirmed) {
       return;
     }
-  
+    
     try {
       const response = await fetch(`../api/delete/${_id}`, {
         method: 'DELETE',
@@ -286,6 +287,7 @@ const DashboardTable = () => {
       console.error("Error deleting server:", error);
     }
   };
+  
   const exportServerData = (serverData: Item) => {
     const jsonServerData = JSON.stringify(serverData);
     const blob = new Blob([jsonServerData], { type: 'application/json' });
