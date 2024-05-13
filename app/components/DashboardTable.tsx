@@ -349,6 +349,8 @@ const DashboardTable = () => {
       setIsValidJSON(false);
     }
   };
+  
+  
 
   const filterItems = (items: Item[], searchTerm: string) => {
     const normalizedSearchTerm = searchTerm.toString().toLowerCase();
