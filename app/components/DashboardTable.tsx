@@ -339,7 +339,7 @@ const DashboardTable = () => {
     }
   };
 
-  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleTextareaChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     const jsonString = e.target.value;
     setEditedItem(jsonString);
     try {
@@ -349,6 +349,7 @@ const DashboardTable = () => {
       setIsValidJSON(false);
     }
   };
+  
   
   
 
@@ -420,7 +421,7 @@ const DashboardTable = () => {
               <Textarea
               className="max-w-full"
               value={editedItem !== null ? editedItem : JSON.stringify(editingItem, null, 2)}
-              onChange={handleTextareaChange as React.ChangeEventHandler<HTMLTextAreaElement>}
+              onChange={handleTextareaChange}
               invalid={!isValidJSON}
             />
             
