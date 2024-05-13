@@ -121,7 +121,8 @@ const columns = [
           <Button variant="bordered">Actions</Button>
         </DropdownTrigger>
         <DropdownMenu aria-label="Actions">
-        <DropdownItem onClick={() => handleDelete(item._id)}>Delete</DropdownItem>
+        <DropdownItem onClick={() => handleDelete(item._id as string)}>Delete</DropdownItem>
+
 
           <DropdownItem onClick={() => exportServerData(item)}>Export</DropdownItem>
           <DropdownItem onClick={() => openModal(item)}>Edit</DropdownItem>
