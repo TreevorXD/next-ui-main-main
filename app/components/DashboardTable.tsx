@@ -418,13 +418,12 @@ const DashboardTable = () => {
           <ModalBody>
             {editingItem && (
               <Textarea
-                label="Edit JSON"
-                placeholder="Start Editing the JSON"
-                className="max-w-full"
-                value={editedItem !== null ? editedItem : JSON.stringify(editingItem, null, 2)}
-                onChange={handleTextareaChange}
-                invalid={!isValidJSON}
-              />
+              className="max-w-full"
+              value={editedItem !== null ? editedItem : JSON.stringify(editingItem, null, 2)}
+              onChange={handleTextareaChange as React.ChangeEventHandler<HTMLTextAreaElement>}
+              invalid={!isValidJSON}
+            />
+            
             )}
             {!isValidJSON && <p className="text-danger">Invalid JSON format</p>}
           </ModalBody>
