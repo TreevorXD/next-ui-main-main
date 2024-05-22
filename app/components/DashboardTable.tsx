@@ -222,11 +222,6 @@ const columns = [
     ),
   },
   {
-    key: "dangerous",
-    label: "Suspicious Owner?",
-    render: (value: boolean) => (value ? "Yes" : "No"),
-  },
-  {
     key: "p2w_id",
     label: "P2W ID",
   },
@@ -424,6 +419,7 @@ const DashboardTable = () => {
               onChange={handleTextareaChange}
               invalid={!isValidJSON}
             />
+            
             
             )}
             {!isValidJSON && <p className="text-danger">Invalid JSON format</p>}
